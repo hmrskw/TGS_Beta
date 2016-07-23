@@ -13,20 +13,14 @@ public class TitleSceneChanger : MonoBehaviour, ISceneBase
 
     void Update()
     {
-        SceneChange();
-
-        Debug.Log("Title");
-    }
-
-
-    public void SceneChange()
-    {
         if (Input.GetMouseButtonDown((int)MouseButtonNumber.LEFT_BUTTON))
         {
-            SceneManager.LoadScene("Tutorial");
-
-            Debug.Log("Title2");
-
+            SceneChange("Tutorial");
         }
+    }
+
+    public void SceneChange(string nextSceneName)
+    {
+        SceneManager.LoadScene(nextSceneName);
     }
 }

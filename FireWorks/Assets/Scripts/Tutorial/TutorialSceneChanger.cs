@@ -13,16 +13,14 @@ public class TutorialSceneChanger : MonoBehaviour, ISceneBase
 
     void Update()
     {
-        SceneChange();
-    }
-
-    public void SceneChange()
-    {
         if (Input.GetMouseButtonDown((int)MouseButtonNumber.LEFT_BUTTON))
         {
-            //TIPS:三澤側でメインを実装したら非コメント化
-            //SceneManager.LoadScene("Main");
-            SceneManager.LoadScene("Result");
+            SceneChange("Main");
         }
+    }
+
+    public void SceneChange(string nextSceneName)
+    {
+            SceneManager.LoadScene(nextSceneName);
     }
 }

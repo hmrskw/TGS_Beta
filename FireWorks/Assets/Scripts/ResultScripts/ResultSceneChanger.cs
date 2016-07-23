@@ -13,15 +13,15 @@ public class ResultSceneChanger : MonoBehaviour, ISceneBase
 
     void Update()
     {
-        SceneChange();
-    }
-
-    public void SceneChange()
-    {
         if (Input.GetMouseButtonDown((int)MouseButtonNumber.LEFT_BUTTON))
         {
-            SceneManager.LoadScene("Title");
+            SceneChange("Title");
         }
+    }
+
+    public void SceneChange(string nextSceneName)
+    {
+            SceneManager.LoadScene(nextSceneName);
     }
 
 }

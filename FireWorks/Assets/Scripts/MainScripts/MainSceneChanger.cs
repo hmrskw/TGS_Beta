@@ -11,16 +11,8 @@ public class MainSceneChanger : MonoBehaviour , ISceneBase
         RIGHT_BUTTON
     }
 
-    void Update()
+    public void SceneChange(string nextSceneName)
     {
-        SceneChange();
-    }
-
-    public void SceneChange()
-    {
-        if (Input.GetMouseButtonDown((int)MouseButtonNumber.LEFT_BUTTON))
-        {  
-            SceneManager.LoadScene("Result");
-        }
+        SceneManager.LoadScene("Result");
     }
 }

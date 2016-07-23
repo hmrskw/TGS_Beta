@@ -3,5 +3,5 @@ using System.Collections;
 
 public interface ISceneBase
 {
-    void SceneChange();
+    void SceneChange(string nextSceneName);
 }
