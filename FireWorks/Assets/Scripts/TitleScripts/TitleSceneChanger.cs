@@ -12,15 +12,11 @@ public class TitleSceneChanger : MonoBehaviour, ISceneBase
     }
 
     void Update()
-    {
-        if (Input.GetMouseButtonDown((int)MouseButtonNumber.LEFT_BUTTON))
-        {
-            SceneChange("Tutorial");
-        }
+    {      
     }
 
     public void SceneChange(string nextSceneName)
     {
-        SceneManager.LoadScene(nextSceneName);
+            SceneManager.LoadScene(nextSceneName);
     }
 }
