@@ -7,7 +7,7 @@ using System.IO;
 
 using UnityEngine.Assertions;
 
-public class ReadCSV : MonoBehaviour
+public class ReadCSV
 {
     public struct CSVData
     {

@@ -17,8 +17,7 @@ public class FireWorksCreater : MonoBehaviour {
     [SerializeField, Tooltip("玉が飛ぶ速さ")]
     GameObject fireWorksSeed;
 
-    [SerializeField]
-    GameObject CSVReader;
+    ReadCSV CSVReader;
 
     [SerializeField]
     DataManager dataManager;
@@ -34,7 +33,7 @@ public class FireWorksCreater : MonoBehaviour {
 
     void Start() {
         //CSVファイルを読み込む
-        readCSV = CSVReader.GetComponent<ReadCSV>();
+        readCSV = new ReadCSV();
         readCSV.ReadFile();
 
         //各値の初期化
