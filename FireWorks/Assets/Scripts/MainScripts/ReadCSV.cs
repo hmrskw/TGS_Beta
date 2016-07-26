@@ -5,32 +5,51 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
+using UnityEngine.Assertions;
+
 public class ReadCSV : MonoBehaviour
 {
     public struct CSVData
     {
-        public float shotTiming;
-        public int fireWorksType;
-        public float shotPosition;
+        public int                           shotTiming;     //撃つ時間
+        public EnumDefinition.FireｗorksType fireｗorksType; //花火の型
+        public int                           shotPosition;   //撃つ場所   
+        public Vector4                       fireworksColor; //花火の色
+        public EnumDefinition.ShotAngle      shotAngle;      //撃つ角度
+        public bool                          isApplyGravity; //重力をかけるかどうか
     }
 
     enum ElementsName
     {
-        SHOT_TIMING = 0,
-        FIREWORKS_TYPE,
-        SHOT_POSITION
+        SHOT_TIMING = 0,  //撃つタイミング
+        FIREWORKS_TYPE,   //花火の型
+        SHOT_POSITION,    //撃つ場所
+        FIREWORKS_COLOR,  //花火の色
+        SHOT_ANGLE,       //撃つ角度
+        IS_APPLY_GRAVITY  //重力をかけるかどうか
     }
+
     //csvデータの要素数
-    const int CSVDATA_ELEMENTS = 3;
+    const int CSVDATA_ELEMENTS = 6;
+    //花火の色のドットで区切った要素数
+    const int FIREWORKS_COLOR_ELEMENTS = 4;
 
     //csvから取り出した情報を入れる配列
     private CSVData[] csvData;
 
+    public CSVData[] CsvData
+    {
+        get { return csvData; }
+    }
+
     void Start()
     {
+        //FireTypeなどのEnumを定義しているクラスの変数
+        var EnumDefiniton = this.GetComponent<EnumDefinition>();
+
         //CSVデータの格納位置のパス
         //TIPS:なにかしらの形でパスを自由に変えられるようにしておく
-        string path = Application.dataPath + "/CSVFiles/Sample.csv";
+        string path = Application.dataPath + "/CSVFiles/SampleTemplate.csv";
 
         //CSVデータを読み込んで、行に分割
         string[] lines = ReadCsvData(path);
@@ -41,18 +60,52 @@ public class ReadCSV : MonoBehaviour
         //カンマ分けされたデータを仮格納する。その初期化
         string[] didCommaSeparationData = new string[lines.Length];
 
+        //CSVデータを区切る文字
+        char[] commaSpliter = { ',' };
+        char[] dotSpliter = { '.' };
+
         for (int i = 0; i < lines.Length; i++)
         {
             //カンマ分けされたデータを格納
-            didCommaSeparationData = DataCommaSeparation(lines[i]);
+            didCommaSeparationData = DataCommaSeparation(lines[i], commaSpliter, CSVDATA_ELEMENTS);
 
             //データをcsvDataに格納
-            csvData[i].shotTiming    = Convert.ToSingle(didCommaSeparationData[(int)ElementsName.SHOT_TIMING]);
-            csvData[i].fireWorksType = Convert.ToInt16(didCommaSeparationData[(int)ElementsName.FIREWORKS_TYPE]);
-            csvData[i].shotPosition  = Convert.ToSingle(didCommaSeparationData[(int)ElementsName.SHOT_POSITION]);
+            csvData[i].shotTiming = Convert.ToInt16(didCommaSeparationData[(int)ElementsName.SHOT_TIMING]);
+
+            //花火の型を文字列で仮格納
+            string tempFireWorkstype = Convert.ToString(didCommaSeparationData[(int)ElementsName.FIREWORKS_TYPE]);
+            //文字列をEnumに変換
+            csvData[i].fireｗorksType = FireworksTypeChecker(tempFireWorkstype);
+
+            csvData[i].shotPosition = Convert.ToInt16(didCommaSeparationData[(int)ElementsName.SHOT_POSITION]);
+
+            //読み込んだ数値を仮格納する
+            float[] tempFireworksColor = new float[4];
+            //CSVから読み込んだ文字列を仮格納する
+            string[] tempFireworksColorSentence = new string[4];
+            //カンマで区切られた文字列をドットでさらに区切る
+            tempFireworksColorSentence = DataCommaSeparation(didCommaSeparationData[(int)ElementsName.FIREWORKS_COLOR], dotSpliter, 4);
+
+            //ドットで区切られた数値を仮格納する
+            for (int j = 0; j < FIREWORKS_COLOR_ELEMENTS; j++)
+            {
+                tempFireworksColor[j] = Convert.ToSingle(tempFireworksColorSentence[j]);
+            }
+
+            //仮格納したデータをcsvDataに格納する
+            csvData[i].fireworksColor = new Vector4(tempFireworksColor[0],
+                                                    tempFireworksColor[1],
+                                                    tempFireworksColor[2],
+                                                    tempFireworksColor[3]);
+            
+            //文字列を元にEnumに変換して格納
+            csvData[i].shotAngle = FireworksAngleChecker(didCommaSeparationData[(int)ElementsName.SHOT_ANGLE]);
+
+            csvData[i].isApplyGravity = Convert.ToBoolean(didCommaSeparationData[(int)ElementsName.IS_APPLY_GRAVITY]);
         }
     }
 
+    //第一引数…読み込むCSVデータファイルのパス　
     string[] ReadCsvData(string path_)
     {
         //ファイル読み込み
@@ -69,27 +122,127 @@ public class ReadCSV : MonoBehaviour
         return lines;
     }
 
-    string[] DataCommaSeparation(string lines_)
+    //第一引数…ReadCsvData関数で一行にされたデータ
+    //第二引数…渡されたデータを区切る文字
+    //第三引数…第一引数のデータの要素数。for文の周回数
+    string[] DataCommaSeparation(string lines_, char[] spliter_, int trialNumber_)
     {
         //カンマとカンマの間に何もなかったら格納しないことにする設定
         System.StringSplitOptions option = StringSplitOptions.RemoveEmptyEntries;
 
-        //カンマ分けの準備(区分けする文字を設定する)
-        char[] spliter = new char[1] { ',' };
-
         //リターン値。カンマ分けしたデータを一行分格納する。
-        string[] CommaSeparationData = new string[CSVDATA_ELEMENTS];
+        string[] CommaSeparationData = new string[trialNumber_];
 
-        for (int i = 0; i < CSVDATA_ELEMENTS; i++)
+        for (int i = 0; i < trialNumber_; i++)
         {
-            //１行にある３つの要素数分準備する
-            string[] readStrData = new string[CSVDATA_ELEMENTS];
-            //３つの要素をカンマで区切って1つずつ格納
-            readStrData = lines_.Split(spliter, option);
+            //１行にあるCsvDataの要素数分準備する
+            string[] readStrData = new string[trialNumber_];
+            //CsvDataを引数の文字で区切って1つずつ格納
+            readStrData = lines_.Split(spliter_, option);
             //readStrDataをリターン値に格納
             CommaSeparationData[i] = readStrData[i];
         }
 
         return CommaSeparationData;
+    }
+
+    //第一引数…CSVデータから読み込んだ文字列
+    EnumDefinition.FireｗorksType FireworksTypeChecker(string fireWorksName_)
+    {
+        if (fireWorksName_ == "ナイアガラ")
+        {
+            return EnumDefinition.FireｗorksType.NAIAGARA;
+        }
+        else if (fireWorksName_ == "菊")
+        {
+            return EnumDefinition.FireｗorksType.KIKU;
+        }
+        else if (fireWorksName_ == "芯入り菊")
+        {
+            return EnumDefinition.FireｗorksType.SINIRI_KIKU;
+        }
+        else if (fireWorksName_ == "芯入り銀冠菊")
+        {
+            return EnumDefinition.FireｗorksType.SINIRI_GINKAMURO_GIKU;
+        }
+        else if (fireWorksName_ == "八重芯菊")
+        {
+            return EnumDefinition.FireｗorksType.YAE_SIN_GIKU;
+        }
+        else if (fireWorksName_ == "牡丹")
+        {
+            return EnumDefinition.FireｗorksType.BOTAN;
+        }
+        else if (fireWorksName_ == "錦冠菊")
+        {
+            return EnumDefinition.FireｗorksType.NISIKI_KAMURO_GIKU;
+        }
+        else if (fireWorksName_ == "蜂")
+        {
+            return EnumDefinition.FireｗorksType.HACHI;
+        }
+        else if (fireWorksName_ == "柳")
+        {
+            return EnumDefinition.FireｗorksType.YANAGI;
+        }
+        else if (fireWorksName_ == "土星")
+        {
+            return EnumDefinition.FireｗorksType.DOSEI;
+        }
+        else if (fireWorksName_ == "万華鏡")
+        {
+            return EnumDefinition.FireｗorksType.MANGEKYOU;
+        }
+        else if (fireWorksName_ == "閃光")
+        {
+            return EnumDefinition.FireｗorksType.SENKOU;
+        }
+        else if (fireWorksName_ == "冠菊")
+        {
+            return EnumDefinition.FireｗorksType.KAMURO_GIKU;
+        }
+        else if (fireWorksName_ == "昇竜")
+        {
+            return EnumDefinition.FireｗorksType.NOBORI_RYU;
+        }
+        else if (fireWorksName_ == "昇分花")
+        {
+            return EnumDefinition.FireｗorksType.NOBORI_BUNKA;
+        }
+        else if (fireWorksName_ == "千輪菊")
+        {
+            return EnumDefinition.FireｗorksType.SENRIN_GIKU;
+        }
+        else
+        {
+            //どの花火の型にも当てはまらない場合エラーを出す
+            Assert.IsTrue(false);
+        }
+
+        return EnumDefinition.FireｗorksType.NONE_TYPE;
+    }
+
+    //第一引数…CSVデータから読み込んだ文字列
+    EnumDefinition.ShotAngle FireworksAngleChecker(string shotAngle_)
+    {
+        if (shotAngle_ == "R")
+        {
+            return EnumDefinition.ShotAngle.RIGHT;
+        }
+        else if (shotAngle_ == "C")
+        {
+            return EnumDefinition.ShotAngle.CENTER;
+        }
+        else if (shotAngle_ == "L")
+        {
+            return EnumDefinition.ShotAngle.LEFT;
+        }
+        else
+        {
+            //どの角度にも当てはまらない場合エラーを出す
+            Assert.IsTrue(false);
+        }
+
+        return EnumDefinition.ShotAngle.NONE_ANGLE;
     }
 }
