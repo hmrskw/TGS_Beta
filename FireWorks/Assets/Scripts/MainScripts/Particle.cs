@@ -2,23 +2,17 @@
 using System.Collections;
 
 public class Particle : MonoBehaviour {
-
+    
     ParticleSystem particle;
+
+    //花火の色
+    Color fireColor;
 
     // Use this for initialization
     void Start () {
         particle = GetComponent<ParticleSystem>();
-        if (transform.tag == "FireWorks")
-        {
-            if (transform.position.y < 30)
-            {
-                particle.startColor = new Color(1, transform.position.y / 29f, 0);
-            }
-            else
-            {
-                particle.startColor = Color.white;
-            }
-        }
+        //花火の色をfireworksの色に変更
+        particle.GetComponent<Renderer>().material.SetColor("_TintColor", fireColor);
     }
 	
 	// Update is called once per frame
@@ -28,4 +22,10 @@ public class Particle : MonoBehaviour {
             Destroy(this.gameObject);
         }
 	}
+
+    public void setColor(Color color)
+    {
+        //正規化
+        this.fireColor = color/255f;
+    }
 }

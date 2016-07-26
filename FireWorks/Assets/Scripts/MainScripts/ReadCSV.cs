@@ -42,10 +42,14 @@ public class ReadCSV : MonoBehaviour
         get { return csvData; }
     }
 
-    void Start()
+    /*修正：三澤
+    FireWorksCreaterのStart関数が先に動くとまずいので
+    Start関数ではなくFireWorksCreaterのStart関数の一番最初で呼び出せるように変更
+    */
+    public void ReadFile()
     {
         //FireTypeなどのEnumを定義しているクラスの変数
-        var EnumDefiniton = this.GetComponent<EnumDefinition>();
+//        var EnumDefiniton = this.GetComponent<EnumDefinition>();
 
         //CSVデータの格納位置のパス
         //TIPS:なにかしらの形でパスを自由に変えられるようにしておく
