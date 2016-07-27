@@ -49,10 +49,12 @@ public class ReadCSV
     public void ReadFile()
     {
         //FireTypeなどのEnumを定義しているクラスの変数
-//        var EnumDefiniton = this.GetComponent<EnumDefinition>();
+        //        var EnumDefiniton = this.GetComponent<EnumDefinition>();
 
         //CSVデータの格納位置のパス
         //TIPS:なにかしらの形でパスを自由に変えられるようにしておく
+        //追記:三澤
+        //exeにビルドしたときのApplication.dataPathの参照先は「○○_DATA」フォルダ直下
         string path = Application.dataPath + "/CSVFiles/SampleTemplate.csv";
 
         //CSVデータを読み込んで、行に分割
