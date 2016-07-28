@@ -219,6 +219,10 @@ public class ReadCSV
         {
             return EnumDefinition.FireｗorksType.SENRIN_GIKU;
         }
+        else if(fireWorksName_ == "花雷")
+        {
+            return EnumDefinition.FireｗorksType.KARAI;
+        }
         else
         {
             //どの花火の型にも当てはまらない場合エラーを出す

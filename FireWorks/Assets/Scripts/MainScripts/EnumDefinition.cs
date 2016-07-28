@@ -21,6 +21,7 @@ public class EnumDefinition : MonoBehaviour
         NOBORI_RYU,            //昇竜
         NOBORI_BUNKA,          //昇分花
         SENRIN_GIKU,           //千輪菊
+        KARAI,                 //花雷
 
         NONE_TYPE = -1
     }
