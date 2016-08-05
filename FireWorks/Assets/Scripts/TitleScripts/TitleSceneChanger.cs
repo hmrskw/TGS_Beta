@@ -12,7 +12,11 @@ public class TitleSceneChanger : MonoBehaviour, ISceneBase
     }
 
     void Update()
-    {      
+    {
+        if (ReceivedZKOO.GetRightHand().isTouching)
+        {
+            SceneChange("Tutorial");
+        }
     }
 
     public void SceneChange(string nextSceneName)

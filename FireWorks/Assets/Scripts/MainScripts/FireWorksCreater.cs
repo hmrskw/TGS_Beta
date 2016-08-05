@@ -14,8 +14,11 @@ public class FireWorksCreater : MonoBehaviour {
     float[] fireWorksAngle = new float[3];
 
 
-    [SerializeField, Tooltip("玉が飛ぶ速さ")]
+    [SerializeField, Tooltip("玉")]
     GameObject fireWorksSeed;
+
+    [SerializeField, Tooltip("爆発")]
+    GameObject[] fireWorksImpact;
 
     ReadCSV CSVReader;
 
@@ -43,12 +46,8 @@ public class FireWorksCreater : MonoBehaviour {
 
     // Update is called once per frame
     void Update() {
-        //マウスがドラッグ状態で当たった時の処理
-        //TIPS:ZKOO設定後は右手に変更
-        if (Input.GetMouseButton(0))
-        {
-            RayCast();
-        }
+        //ポインターが当たった時の処理
+        RayCast();
 
         if (!dataManager.IsGameEnd)
         {
@@ -83,6 +82,22 @@ public class FireWorksCreater : MonoBehaviour {
                     {
                         //スコアを計算をfireworksが行うためにパスを渡す
                         fireWorks.SetDataManager(dataManager);
+
+                        switch(readCSV.CsvData[readFireworksNumber].fireｗorksType)
+                        {
+                            case EnumDefinition.FireｗorksType.KIKU:
+                                fireWorks.FireWorksImpact = fireWorksImpact[0];
+                                break;
+                            case EnumDefinition.FireｗorksType.BOTAN:
+                                fireWorks.FireWorksImpact = fireWorksImpact[1];
+                                break;
+                            case EnumDefinition.FireｗorksType.DOSEI:
+                                fireWorks.FireWorksImpact = fireWorksImpact[2];
+                                break;
+                            default:
+                                fireWorks.FireWorksImpact = fireWorksImpact[3];
+                                break;
+                        }
                         //CSVの色の設定に合わせて色を変更
                         fireWorks.setColor(readCSV.CsvData[readFireworksNumber].fireworksColor);
                         //重力を使用する場合はRigidbodyをつける
@@ -90,6 +105,9 @@ public class FireWorksCreater : MonoBehaviour {
                         {
                             seedObj.AddComponent<Rigidbody>();
                         }
+
+
+
                     }
 
                     //飛ばす花火を更新
@@ -103,8 +121,10 @@ public class FireWorksCreater : MonoBehaviour {
 
     void RayCast()
     {
-        //カメラの場所からマウスポインタの場所に向かってレイを飛ばす
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        //カメラの場所からポインタの場所に向かってレイを飛ばす
+        Ray ray = Camera.main.ScreenPointToRay(new Vector2( ReceivedZKOO.GetRightHand().position.x, ReceivedZKOO.GetRightHand().position.y+Screen.height));
+        Debug.Log("raycast");
+        Debug.DrawRay(ray.origin,ray.direction*100,Color.red);
         RaycastHit hit = new RaycastHit();
 
         //レイが何か当たっているかを調べる

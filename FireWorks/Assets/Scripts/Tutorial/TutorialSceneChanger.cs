@@ -13,7 +13,7 @@ public class TutorialSceneChanger : MonoBehaviour, ISceneBase
 
     void Update()
     {
-        if (Input.GetMouseButtonDown((int)MouseButtonNumber.LEFT_BUTTON))
+        if (ReceivedZKOO.GetRightHand().isTouching)
         {
             SceneChange("Main");
         }

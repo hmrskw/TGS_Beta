@@ -19,7 +19,10 @@ public class Particle : MonoBehaviour {
 	void Update () {
         if (!particle.isPlaying)
         {
-            Destroy(this.gameObject);
+            if (particle.subEmitters.birth0 == null || !particle.subEmitters.birth0.isPlaying)
+            {
+                Destroy(this.gameObject);
+            }
         }
 	}
 

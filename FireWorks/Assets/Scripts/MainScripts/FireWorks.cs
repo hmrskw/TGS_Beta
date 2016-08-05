@@ -18,8 +18,13 @@ public class FireWorks : MonoBehaviour {
     [SerializeField]
     float speed;
 
-    [SerializeField, Tooltip("成功したときに発生させるパーティクル")]
-    GameObject fireWorks;
+    //[SerializeField, Tooltip("成功したときに発生させるパーティクル")]
+    GameObject fireWorksImpact;
+    public GameObject FireWorksImpact
+    {
+        set { fireWorksImpact = value; }
+    }
+
 
     [SerializeField,Tooltip("失敗したときに発生させるパーティクル")]
     GameObject smoke;
@@ -100,7 +105,7 @@ public class FireWorks : MonoBehaviour {
         //スコアを加算
         dataManager.AddScore(score);
         //花火のパーティクルを生成
-        GameObject fireworksParticle = Instantiate(fireWorks, this.transform.position, Quaternion.Euler(0, 0, 0))as GameObject;
+        GameObject fireworksParticle = Instantiate(fireWorksImpact, this.transform.position, Quaternion.Euler(0, 0, 0))as GameObject;
         //花火の色を設定
         fireworksParticle.GetComponent<Particle>().setColor(this.GetComponent<Renderer>().material.color);
     }

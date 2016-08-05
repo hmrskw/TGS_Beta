@@ -35,8 +35,10 @@ public class DataManager : MonoBehaviour {
     bool isGameEnd;
     public bool IsGameEnd{get {return isGameEnd;}}
 
+    MainSceneChanger mSceneChanger;
     // Use this for initialization
     void Start () {
+        mSceneChanger = new MainSceneChanger();
         resultPanel.SetActive(false);
         inGamePanel.SetActive(true);
         isGameEnd = false;
@@ -65,16 +67,20 @@ public class DataManager : MonoBehaviour {
         {
             if (!resultPanel.activeInHierarchy)
             {
-                GameObject[] gos;
-                gos = GameObject.FindGameObjectsWithTag("FireWorksSeed");
+                GameObject[] fireWorksSeeds;
+                fireWorksSeeds = GameObject.FindGameObjectsWithTag("FireWorksSeed");
 
-                if (gos.Length == 0)
+                if (fireWorksSeeds.Length == 0)
                 {
                     inGamePanel.SetActive(false);
                     resultScoreText.text = "スコア:" + score.ToString().PadLeft(3, '0');
                     resultExplosionNumText.text = "爆発させた花火の数:" + explosionNum.ToString().PadLeft(2, '0');
                     resultPanel.SetActive(true);
                 }
+            }
+            if (ReceivedZKOO.GetRightHand().isTouching)
+            {
+                mSceneChanger.SceneChange("Result");
             }
         }
     }
