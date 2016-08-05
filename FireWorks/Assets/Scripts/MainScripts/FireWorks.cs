@@ -52,7 +52,7 @@ public class FireWorks : MonoBehaviour {
     void Update () {
         transform.Translate(0, speed, 0);
 
-        if (isExploded)
+        if (isExploded && ReceivedZKOO.GetRightHand().isTouching == false)
         {
             //不発状態でない玉がボーダーライン超えていたとき
             if (transform.position.y > borderLine)
