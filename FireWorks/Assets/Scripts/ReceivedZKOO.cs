@@ -54,10 +54,6 @@ public class ReceivedZKOO : MonoBehaviour {
         }
         Instance = this;
         DontDestroyOnLoad(gameObject);
-        if (ZKOOMode)
-        {
-
-        }
     }
 
     void Start()
@@ -191,7 +187,8 @@ public class ReceivedZKOO : MonoBehaviour {
 
                 string[] handPosition = new string[2];
                 handPosition = DataSeparation(data[2], separationDot, 2);
-                hand[i].position = new Vector2(Convert.ToSingle(handPosition[0])-Screen.width, -1 * Convert.ToSingle(handPosition[1]) + Screen.height);
+
+                hand[i].position = new Vector2(Convert.ToSingle(handPosition[0])-Screen.width, -1 * Convert.ToSingle(handPosition[1]));
 
                 hand[i].rotation = Convert.ToSingle(data[3]);
             }
