@@ -14,10 +14,10 @@ public class TutorialSceneChanger : MonoBehaviour, ISceneBase
     void Update()
     {
         //握ってるかどうかの判定
-        if (ReceivedZKOO.GetRightHand().isTouching)
-        {
-            SceneChange("Main");
-        }
+        //if (ReceivedZKOO.GetHand(ReceivedZKOO.HAND.RIGHT).isTouching)
+        //{
+            //SceneChange("Main");
+        //}
     }
 
     public void SceneChange(string nextSceneName)

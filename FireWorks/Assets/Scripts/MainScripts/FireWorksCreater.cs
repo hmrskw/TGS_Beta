@@ -1,12 +1,16 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class FireWorksCreater : MonoBehaviour {
+public class FireWorksCreater : MonoBehaviour
+{
 
     enum DIRECTION
     {
         LEFT = 1, RIGHT = -1
     }
+    [SerializeField, Tooltip("時間制限")]
+    int timeLimit;
+
     [SerializeField, Tooltip("玉が発射される位置")]
     Vector3[] fireWorksInitPosition = new Vector3[5];
 
@@ -22,8 +26,8 @@ public class FireWorksCreater : MonoBehaviour {
 
     ReadCSV CSVReader;
 
-    [SerializeField]
-    DataManager dataManager;
+    //[SerializeField]
+    //DataManager dataManager;
 
     //シーン内での経過時間
     float time;
@@ -31,25 +35,37 @@ public class FireWorksCreater : MonoBehaviour {
     FireWorks fireWorks;
     ReadCSV readCSV;
 
+    int LockOnNumber;
+
     //現在何番目（CSVの何行目）の花火を飛ばしているか
     int readFireworksNumber;
 
-    void Start() {
+    MainSceneChanger mSceneChanger;
+
+    void Start()
+    {
+        mSceneChanger = new MainSceneChanger();
+    
         //CSVファイルを読み込む
         readCSV = new ReadCSV();
         readCSV.ReadFile();
 
+        ScoreManager.init();
+        ScoreManager.TotalFireWorksNum = readCSV.CsvData.Length;
+
         //各値の初期化
         readFireworksNumber = 0;
         time = 0;
+        LockOnNumber = 0;
     }
 
     // Update is called once per frame
-    void Update() {
+    void Update()
+    {
         //ポインターが当たった時の処理
         RayCast();
 
-        if (!dataManager.IsGameEnd)
+        if (timeLimit > time)
         {
             //時間の更新
             time += Time.deltaTime;
@@ -57,6 +73,8 @@ public class FireWorksCreater : MonoBehaviour {
             //CsvDataの配列長さを超えていないかのチェック
             if (readCSV.CsvData.Length > readFireworksNumber)
             {
+                if (!ReceivedZKOO.GetHand(ReceivedZKOO.HAND.RIGHT).isTouching) LockOnNumber = 0;
+
                 //発射時間が現在の経過時間と同じときの処理
                 while (readCSV.CsvData[readFireworksNumber].shotTiming <= time)
                 {
@@ -81,9 +99,9 @@ public class FireWorksCreater : MonoBehaviour {
                     if (fireWorks != null)
                     {
                         //スコアを計算をfireworksが行うためにパスを渡す
-                        fireWorks.SetDataManager(dataManager);
+                        //fireWorks.SetDataManager(dataManager);
 
-                        switch(readCSV.CsvData[readFireworksNumber].fireｗorksType)
+                        switch (readCSV.CsvData[readFireworksNumber].fireｗorksType)
                         {
                             case EnumDefinition.FireｗorksType.KIKU:
                                 fireWorks.FireWorksImpact = fireWorksImpact[0];
@@ -98,20 +116,13 @@ public class FireWorksCreater : MonoBehaviour {
                                 fireWorks.FireWorksImpact = fireWorksImpact[3];
                                 break;
                         }
-
                         //CSVの色の設定に合わせて色を変更
                         //fireWorks.setColor(readCSV.CsvData[readFireworksNumber].fireworksColor);
-                        //FIX：仮置き
-                        fireWorks.setColor(Color.white);
-
                         //重力を使用する場合はRigidbodyをつける
-                        if (readCSV.CsvData[readFireworksNumber].isApplyGravity)
-                        {
-                            seedObj.AddComponent<Rigidbody>();
-                        }
-
-
-
+                        //if (readCSV.CsvData[readFireworksNumber].isApplyGravity)
+                        //{
+                            //seedObj.AddComponent<Rigidbody>();
+                        //}
                     }
 
                     //飛ばす花火を更新
@@ -121,10 +132,48 @@ public class FireWorksCreater : MonoBehaviour {
                 }
             }
         }
+        else
+        {
+            GameObject[] fireWorksSeeds;
+            fireWorksSeeds = GameObject.FindGameObjectsWithTag("FireWorksSeed");
+
+            if (fireWorksSeeds.Length == 0)
+                StartCoroutine(SceneChanger());
+        }
+    }
+
+    IEnumerator SceneChanger()
+    {
+        yield return new WaitForSeconds(5f);
+        mSceneChanger.SceneChange("Result");
+        yield return null;
     }
 
     void RayCast()
     {
+        //カメラの場所からポインタの場所に向かってレイを飛ばす
+        Ray ray = Camera.main.ScreenPointToRay(new Vector2(ReceivedZKOO.GetHand(ReceivedZKOO.HAND.RIGHT).position.x, ReceivedZKOO.GetHand(ReceivedZKOO.HAND.RIGHT).position.y + Screen.height));
+        RaycastHit hit = new RaycastHit();
+        Debug.DrawRay(ray.origin, ray.direction * 100, Color.red);
+
+        //レイが何か当たっているかを調べる
+        if (Physics.Raycast(ray, out hit))
+        {
+            //当たったオブジェクトを格納
+            GameObject obj = hit.collider.gameObject;
+            //花火の玉のオブジェクトなら爆発するかのフラグを真にする
+            fireWorks = obj.GetComponent<FireWorks>();
+            if (fireWorks != null && fireWorks.IsExploded == false)
+            {
+                fireWorks.ExploadOrderNumber = LockOnNumber++;
+                fireWorks.IsExploded = true;
+            }
+        }
+    }
+}
+/*
+RayCast(当たった時に実行したい関数(), string "判定したいオブジェクトの名前")
+{
         //カメラの場所からポインタの場所に向かってレイを飛ばす
         Ray ray = Camera.main.ScreenPointToRay(new Vector2( ReceivedZKOO.GetRightHand().position.x, ReceivedZKOO.GetRightHand().position.y));
         Debug.Log("raycast");
@@ -135,13 +184,10 @@ public class FireWorksCreater : MonoBehaviour {
         if (Physics.Raycast(ray, out hit))
         {
             //当たったオブジェクトを格納
-            GameObject obj = hit.collider.gameObject;
-            //花火の玉のオブジェクトなら爆発するかのフラグを真にする
-            fireWorks = obj.GetComponent<FireWorks>();
-            if (fireWorks != null)
-            {
-                fireWorks.IsExploded = true;
+            string objName = hit.collider.gameObject.name;
+            if(objName == "判定したいオブジェクトの名前"){
+                当たった時に実行したい関数();
             }
-        }
-    }
+        }    
 }
+*/

@@ -13,7 +13,7 @@ public class TitleSceneChanger : MonoBehaviour, ISceneBase
 
     void Update()
     {
-        if (ReceivedZKOO.GetRightHand().isTouching)
+        if (ReceivedZKOO.isGripped(ReceivedZKOO.HAND.RIGHT))
         {
             SceneChange("Tutorial");
         }

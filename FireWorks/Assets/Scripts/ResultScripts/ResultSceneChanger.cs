@@ -13,7 +13,7 @@ public class ResultSceneChanger : MonoBehaviour, ISceneBase
 
     void Update()
     {
-        if (ReceivedZKOO.GetRightHand().isTouching)
+        if (ReceivedZKOO.GetHand(ReceivedZKOO.HAND.RIGHT).isTouching)
         {
             SceneChange("Title");
         }

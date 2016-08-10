@@ -78,7 +78,7 @@ public class DataManager : MonoBehaviour {
                     resultPanel.SetActive(true);
                 }
             }
-            if (ReceivedZKOO.GetRightHand().isTouching)
+            if (ReceivedZKOO.GetHand(ReceivedZKOO.HAND.RIGHT).isTouching)
             {
                 mSceneChanger.SceneChange("Result");
             }

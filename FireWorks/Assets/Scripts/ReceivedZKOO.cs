@@ -9,6 +9,11 @@ using System.Text;
 public class ReceivedZKOO : MonoBehaviour {
     const int HAND_NUM = 2;
 
+    public enum HAND
+    {
+        RIGHT = 0,
+        LEFT,
+    }
     public struct ZKOOHandData
     {
         public bool isTracking;
@@ -38,6 +43,7 @@ public class ReceivedZKOO : MonoBehaviour {
     }
 
     private static ZKOOHandData[] hand = new ZKOOHandData[HAND_NUM];
+    private static bool nowGripped = false; 
 
     private System.Net.Sockets.UdpClient udpClient = null;
 
@@ -103,7 +109,7 @@ public class ReceivedZKOO : MonoBehaviour {
         {
             hand[0].isTracking = true;
             hand[0].isTouching = Input.GetMouseButton(0);
-            hand[0].position = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
+            hand[0].position = new Vector2(Input.mousePosition.x, Input.mousePosition.y-Screen.height);
 
             if (hand[0].isTouching) { 
                 img[0].sprite = holdHandSprite[0];
@@ -188,7 +194,7 @@ public class ReceivedZKOO : MonoBehaviour {
                 string[] handPosition = new string[2];
                 handPosition = DataSeparation(data[2], separationDot, 2);
 
-                hand[i].position = new Vector2(Convert.ToSingle(handPosition[0])-Screen.width, -1 * Convert.ToSingle(handPosition[1]));
+                hand[i].position = new Vector2(Convert.ToSingle(handPosition[0])-Screen.width, (-1 * Convert.ToSingle(handPosition[1]))+Screen.height);
 
                 hand[i].rotation = Convert.ToSingle(data[3]);
             }
@@ -233,13 +239,26 @@ public class ReceivedZKOO : MonoBehaviour {
         return separationData;
     }
 
-    public static ZKOOHandData GetRightHand()
+    public static ZKOOHandData GetHand(HAND handID)
     {
-        return hand[0];
+        return hand[(int)handID];
     }
 
-    public static ZKOOHandData GetLeftHand()
+    public static bool isGripped(HAND handID)
     {
-        return hand[1];
+        bool gripped = (hand[(int)handID].isTouching == true && nowGripped == false);
+
+        nowGripped = hand[(int)handID].isTouching;
+
+        return gripped;
     }
+    //public static ZKOOHandData GetRightHand(HAND handID)
+    //{
+    //    return hand[(int)handID];
+    //}
+
+    //public static ZKOOHandData GetLeftHand()
+    //{
+    //    return hand[1];
+    //}
 }

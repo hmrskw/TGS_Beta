@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class ButtonReaction : MonoBehaviour
 {
+    [SerializeField]
     TutorialSceneChanger tutorialSceneChanger;
 
     [SerializeField, Tooltip("画面左下に描画する看板")]
@@ -47,11 +48,11 @@ public class ButtonReaction : MonoBehaviour
     void Update()
     {
         //FIX:ZKOOの反応がおかしいので、スペースキーで代用している
-        //if (ReceivedZKOO.GetRightHand().isTouching)
+        if (ReceivedZKOO.isGripped(ReceivedZKOO.HAND.RIGHT))
         {
             // Debug.Log("押された");
             //TIPS:現在はスペースキーで反応するためEasingが連打可能になっている
-            if (Input.GetKeyDown(KeyCode.Space))//RayCast())
+            if (/*Input.GetKeyDown(KeyCode.Space))*/RayCast())
             {
                 Debug.Log("当たった");
                 
@@ -101,7 +102,7 @@ public class ButtonReaction : MonoBehaviour
         else
         {
             canRotation = false;
-            tutorialSceneChanger.SceneChange("main");
+            //tutorialSceneChanger.SceneChange("Main");
         }
     }
 
@@ -131,14 +132,14 @@ public class ButtonReaction : MonoBehaviour
 
         signborad.transform.position = Vector3.Lerp(startPosition[0], endPositon[0], pos);
         pageTurnOverButton[1].transform.position = Vector3.Lerp(startPosition[1], endPositon[1], pos);
+
+        if(rate >= 1)tutorialSceneChanger.SceneChange("Main");
     }
 
     bool RayCast()
     {
         //カメラの場所からポインタの場所に向かってレイを飛ばす
-        Ray ray = Camera.main.ScreenPointToRay(new Vector2(ReceivedZKOO.GetRightHand().position.x, ReceivedZKOO.GetRightHand().position.y + Screen.height));
-        Debug.Log("raycast");
-        Debug.DrawRay(ray.origin, ray.direction * 100, Color.red);
+        Ray ray = Camera.main.ScreenPointToRay(new Vector2(ReceivedZKOO.GetHand(ReceivedZKOO.HAND.RIGHT).position.x, ReceivedZKOO.GetHand(ReceivedZKOO.HAND.RIGHT).position.y + Screen.height));
         RaycastHit hit = new RaycastHit();
 
         //レイが何か当たっているかを調べる
