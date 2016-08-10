@@ -11,12 +11,12 @@ public class ReadCSV
 {
     public struct CSVData
     {
-        public int                           shotTiming;     //撃つ時間
+        public int shotTiming;     //撃つ時間
         public EnumDefinition.FireｗorksType fireｗorksType; //花火の型
-        public int                           shotPosition;   //撃つ場所   
-        public Vector4                       fireworksColor; //花火の色
-        public EnumDefinition.ShotAngle      shotAngle;      //撃つ角度
-        public bool                          isApplyGravity; //重力をかけるかどうか
+        public int shotPosition;   //撃つ場所   
+        public int fireworksColor; //花火の色
+        public EnumDefinition.ShotAngle shotAngle;      //撃つ角度
+        public bool isApplyGravity; //重力をかけるかどうか
     }
 
     enum ElementsName
@@ -73,7 +73,7 @@ public class ReadCSV
         for (int i = 0; i < lines.Length; i++)
         {
             //カンマ分けされたデータを格納
-            didCommaSeparationData = DataCommaSeparation(lines[i], commaSpliter, CSVDATA_ELEMENTS);
+            didCommaSeparationData = DataSeparation(lines[i], commaSpliter, CSVDATA_ELEMENTS);
 
             //データをcsvDataに格納
             csvData[i].shotTiming = Convert.ToInt16(didCommaSeparationData[(int)ElementsName.SHOT_TIMING]);
@@ -85,24 +85,27 @@ public class ReadCSV
 
             csvData[i].shotPosition = Convert.ToInt16(didCommaSeparationData[(int)ElementsName.SHOT_POSITION]);
 
+            /**
+            //使わなくなったが、Vector4に格納する方法のコード
+
             //読み込んだ数値を仮格納する
             float[] tempFireworksColor = new float[4];
             //CSVから読み込んだ文字列を仮格納する
             string[] tempFireworksColorSentence = new string[4];
             //カンマで区切られた文字列をドットでさらに区切る
             tempFireworksColorSentence = DataCommaSeparation(didCommaSeparationData[(int)ElementsName.FIREWORKS_COLOR], dotSpliter, 4);
-
             //ドットで区切られた数値を仮格納する
             for (int j = 0; j < FIREWORKS_COLOR_ELEMENTS; j++)
             {
                 tempFireworksColor[j] = Convert.ToSingle(tempFireworksColorSentence[j]);
             }
-
             //仮格納したデータをcsvDataに格納する
-            csvData[i].fireworksColor = new Vector4(tempFireworksColor[0],
-                                                    tempFireworksColor[1],
-                                                    tempFireworksColor[2],
-                                                    tempFireworksColor[3]);
+            csvData[i].fireworksColor = new Vector4(tempFireworksColor[0],tempFireworksColor[1],
+                                                    tempFireworksColor[2],tempFireworksColor[3]);
+            /**/
+
+            //CSVデータは「１」か「２」だが、このデータが添え字になるため－１している
+            csvData[i].fireworksColor = Convert.ToInt16(didCommaSeparationData[(int)ElementsName.FIREWORKS_COLOR]) - 1;
             
             //文字列を元にEnumに変換して格納
             csvData[i].shotAngle = FireworksAngleChecker(didCommaSeparationData[(int)ElementsName.SHOT_ANGLE]);
@@ -131,7 +134,7 @@ public class ReadCSV
     //第一引数…ReadCsvData関数で一行にされたデータ
     //第二引数…渡されたデータを区切る文字
     //第三引数…第一引数のデータの要素数。for文の周回数
-    string[] DataCommaSeparation(string lines_, char[] spliter_, int trialNumber_)
+    string[] DataSeparation(string lines_, char[] spliter_, int trialNumber_)
     {
         //カンマとカンマの間に何もなかったら格納しないことにする設定
         System.StringSplitOptions option = StringSplitOptions.RemoveEmptyEntries;
@@ -219,7 +222,7 @@ public class ReadCSV
         {
             return EnumDefinition.FireｗorksType.SENRIN_GIKU;
         }
-        else if(fireWorksName_ == "花雷")
+        else if (fireWorksName_ == "花雷")
         {
             return EnumDefinition.FireｗorksType.KARAI;
         }

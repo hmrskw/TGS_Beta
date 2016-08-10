@@ -98,8 +98,12 @@ public class FireWorksCreater : MonoBehaviour {
                                 fireWorks.FireWorksImpact = fireWorksImpact[3];
                                 break;
                         }
+
                         //CSVの色の設定に合わせて色を変更
-                        fireWorks.setColor(readCSV.CsvData[readFireworksNumber].fireworksColor);
+                        //fireWorks.setColor(readCSV.CsvData[readFireworksNumber].fireworksColor);
+                        //FIX：仮置き
+                        fireWorks.setColor(Color.white);
+
                         //重力を使用する場合はRigidbodyをつける
                         if (readCSV.CsvData[readFireworksNumber].isApplyGravity)
                         {
@@ -122,7 +126,7 @@ public class FireWorksCreater : MonoBehaviour {
     void RayCast()
     {
         //カメラの場所からポインタの場所に向かってレイを飛ばす
-        Ray ray = Camera.main.ScreenPointToRay(new Vector2( ReceivedZKOO.GetRightHand().position.x, ReceivedZKOO.GetRightHand().position.y+Screen.height));
+        Ray ray = Camera.main.ScreenPointToRay(new Vector2( ReceivedZKOO.GetRightHand().position.x, ReceivedZKOO.GetRightHand().position.y));
         Debug.Log("raycast");
         Debug.DrawRay(ray.origin,ray.direction*100,Color.red);
         RaycastHit hit = new RaycastHit();

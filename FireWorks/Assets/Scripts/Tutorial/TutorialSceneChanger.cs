@@ -13,6 +13,7 @@ public class TutorialSceneChanger : MonoBehaviour, ISceneBase
 
     void Update()
     {
+        //握ってるかどうかの判定
         if (ReceivedZKOO.GetRightHand().isTouching)
         {
             SceneChange("Main");
