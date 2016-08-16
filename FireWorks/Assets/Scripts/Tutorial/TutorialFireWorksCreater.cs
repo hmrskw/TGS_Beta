@@ -13,6 +13,9 @@ public class TutorialFireWorksCreater : MonoBehaviour
     [SerializeField, Tooltip("爆発")]
     GameObject fireWorksImpact;
 
+    [SerializeField, Tooltip("何秒に一度発射するか")]
+    float frequency;
+     
     //シーン内での経過時間
     float time;
 
@@ -38,20 +41,23 @@ public class TutorialFireWorksCreater : MonoBehaviour
 
         if (!ReceivedZKOO.GetHand(ReceivedZKOO.HAND.RIGHT).isTouching) LockOnNumber = 0;
 
-        if (time > 2)
+        if (time > frequency)
         {
-            //玉の生成
-            GameObject seedObj = Instantiate(
-                fireWorksSeed,//玉のプレハブ
-                fireWorksInitPosition[0],//発射位置
-                Quaternion.identity//角度
-                ) as GameObject;
+            for (int i = 0; i < fireWorksInitPosition.Length; i++)
+            {
+                //玉の生成
 
-            fireWorks = seedObj.GetComponent<FireWorks>();
+                GameObject seedObj = Instantiate(
+                    fireWorksSeed,//玉のプレハブ
+                    fireWorksInitPosition[i],//発射位置
+                    Quaternion.identity//角度
+                    ) as GameObject;
 
-            if (fireWorks != null)
-                fireWorks.FireWorksImpact = fireWorksImpact;
+                fireWorks = seedObj.GetComponent<FireWorks>();
 
+                if (fireWorks != null)
+                    fireWorks.FireWorksImpact = fireWorksImpact;
+            }
             time = 0;
         }
     }
@@ -70,7 +76,7 @@ public class TutorialFireWorksCreater : MonoBehaviour
             GameObject obj = hit.collider.gameObject;
             //花火の玉のオブジェクトなら爆発するかのフラグを真にする
             fireWorks = obj.GetComponent<FireWorks>();
-            if (fireWorks != null)
+            if (fireWorks != null && fireWorks.IsExploded == false)
             {
                 fireWorks.ExploadOrderNumber = LockOnNumber++;
                 fireWorks.IsExploded = true;

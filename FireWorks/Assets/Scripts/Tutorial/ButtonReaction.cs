@@ -54,11 +54,11 @@ public class ButtonReaction : MonoBehaviour
             //TIPS:現在はスペースキーで反応するためEasingが連打可能になっている
             if (/*Input.GetKeyDown(KeyCode.Space))*/RayCast())
             {
-                Debug.Log("当たった");
+                //Debug.Log("当たった");
                 
                 if (pageCount == 0)
                 {
-                    Debug.Log("入った");
+                    //Debug.Log("入った");
 
                     //ページを次のページに変更
                     pageCount = 1;

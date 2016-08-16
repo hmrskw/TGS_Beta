@@ -10,15 +10,6 @@ public class ScoreManager : MonoBehaviour {
 
     static int score;
 
-    // Use this for initialization
-    void Start () {
-    }
-	
-	// Update is called once per frame
-	void Update () {
-        Debug.Log(score);
-	}
-
     public static void init()
     {
         totalFireWorksNum = 0;
@@ -27,7 +18,10 @@ public class ScoreManager : MonoBehaviour {
     }
     public static void AddScore(int score_)
     {
-        explosionNum++;
-        score += score_;
+        if (explosionNum < totalFireWorksNum)
+        {
+            explosionNum++;
+            score += score_;
+        }
     }
 }

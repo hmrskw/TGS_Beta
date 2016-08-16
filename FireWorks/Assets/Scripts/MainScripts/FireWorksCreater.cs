@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class FireWorksCreater : MonoBehaviour
 {
@@ -21,8 +22,24 @@ public class FireWorksCreater : MonoBehaviour
     [SerializeField, Tooltip("玉")]
     GameObject fireWorksSeed;
 
+//    [SerializeField, Tooltip("爆発")]
+//    GameObject[] fireWorksImpact;
+
+    //Inspectorに複数データを表示するためのクラス
+    [System.SerializableAttribute]
+    public class FireWorksImpact
+    {
+        public GameObject[] Color = new GameObject[2];
+
+        public FireWorksImpact(GameObject[] color)
+        {
+            Color = color;
+        }
+    }
+
+    //Inspectorに表示される
     [SerializeField, Tooltip("爆発")]
-    GameObject[] fireWorksImpact;
+    private FireWorksImpact[] fireWorksImpact;
 
     ReadCSV CSVReader;
 
@@ -41,18 +58,18 @@ public class FireWorksCreater : MonoBehaviour
     int readFireworksNumber;
 
     MainSceneChanger mSceneChanger;
-
-    void Start()
+    void Awake()
     {
-        mSceneChanger = new MainSceneChanger();
-    
         //CSVファイルを読み込む
         readCSV = new ReadCSV();
         readCSV.ReadFile();
 
         ScoreManager.init();
         ScoreManager.TotalFireWorksNum = readCSV.CsvData.Length;
-
+    }
+    void Start()
+    {
+        mSceneChanger = new MainSceneChanger();
         //各値の初期化
         readFireworksNumber = 0;
         time = 0;
@@ -101,21 +118,35 @@ public class FireWorksCreater : MonoBehaviour
                         //スコアを計算をfireworksが行うためにパスを渡す
                         //fireWorks.SetDataManager(dataManager);
 
-                        switch (readCSV.CsvData[readFireworksNumber].fireｗorksType)
+                        fireWorks.FireWorksImpact = fireWorksImpact
+                            [(int)readCSV.CsvData[readFireworksNumber].fireｗorksType]
+                            .Color[readCSV.CsvData[readFireworksNumber].fireworksColor];
+
+/*                        switch (readCSV.CsvData[readFireworksNumber].fireｗorksType)
                         {
-                            case EnumDefinition.FireｗorksType.KIKU:
-                                fireWorks.FireWorksImpact = fireWorksImpact[0];
-                                break;
                             case EnumDefinition.FireｗorksType.BOTAN:
-                                fireWorks.FireWorksImpact = fireWorksImpact[1];
+                                fireWorks.FireWorksImpact = fireWorksImpact[0,readCSV.CsvData[readFireworksNumber].fireworksColor];
                                 break;
                             case EnumDefinition.FireｗorksType.DOSEI:
-                                fireWorks.FireWorksImpact = fireWorksImpact[2];
+                                fireWorks.FireWorksImpact = fireWorksImpact[1,readCSV.CsvData[readFireworksNumber].fireworksColor];
+                                break;
+                            case EnumDefinition.FireｗorksType.KARAI:
+                                fireWorks.FireWorksImpact = fireWorksImpact[2,readCSV.CsvData[readFireworksNumber].fireworksColor];
+                                break;
+                            case EnumDefinition.FireｗorksType.KIKU:
+                                fireWorks.FireWorksImpact = fireWorksImpact[3,readCSV.CsvData[readFireworksNumber].fireworksColor];
+                                break;
+                            case EnumDefinition.FireｗorksType.SINIRI_KIKU:
+                                fireWorks.FireWorksImpact = fireWorksImpact[4,readCSV.CsvData[readFireworksNumber].fireworksColor];
+                                break;
+                            case EnumDefinition.FireｗorksType.MANGEKYOU:
+                                fireWorks.FireWorksImpact = fireWorksImpact[5,readCSV.CsvData[readFireworksNumber].fireworksColor];
                                 break;
                             default:
-                                fireWorks.FireWorksImpact = fireWorksImpact[3];
+                                fireWorks.FireWorksImpact = fireWorksImpact[0,readCSV.CsvData[readFireworksNumber].fireworksColor];
                                 break;
                         }
+*/
                         //CSVの色の設定に合わせて色を変更
                         //fireWorks.setColor(readCSV.CsvData[readFireworksNumber].fireworksColor);
                         //重力を使用する場合はRigidbodyをつける

@@ -102,7 +102,7 @@ public class FireWorks : MonoBehaviour
 
     IEnumerator expload()
     {
-        yield return new WaitForSeconds(exploadOrderNumber * 0.05f);
+        yield return new WaitForSeconds(exploadOrderNumber * 0.1f);
 
         //不発状態でない玉がボーダーライン超えていたとき
         if (transform.position.y > borderLine)
@@ -126,10 +126,10 @@ public class FireWorks : MonoBehaviour
     //}
 
     //色の変更
-    public void setColor(Vector4 color)
-    {
-        this.GetComponent<Renderer>().material.color = color;
-    }
+    //public void setColor(Vector4 color)
+    //{
+        //this.GetComponent<Renderer>().material.color = color;
+    //}
 
     //爆発したときの処理
     private void Explosion(int score)
@@ -143,7 +143,7 @@ public class FireWorks : MonoBehaviour
         //}
         ScoreManager.AddScore(score);
         //花火のパーティクルを生成
-        GameObject fireworksParticle = Instantiate(fireWorksImpact, this.transform.position, Quaternion.Euler(0, 0, 0)) as GameObject;
+        GameObject fireworksParticle = Instantiate(fireWorksImpact, transform.position, Quaternion.Euler(0, 0, 0)) as GameObject;
         //花火の色を設定
         //fireworksParticle.GetComponent<Particle>().setColor(this.GetComponent<Renderer>().material.color);
     }
