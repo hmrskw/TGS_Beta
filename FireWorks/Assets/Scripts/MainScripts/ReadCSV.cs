@@ -16,7 +16,8 @@ public class ReadCSV
         public int shotPosition;   //撃つ場所   
         public int fireworksColor; //花火の色
         public EnumDefinition.ShotAngle shotAngle;      //撃つ角度
-//        public bool isApplyGravity; //重力をかけるかどうか
+      //public bool isApplyGravity; //重力をかけるかどうか
+        public float fireworksSize;//花火のサイズ
     }
 
     enum ElementsName
@@ -26,13 +27,14 @@ public class ReadCSV
         SHOT_POSITION,    //撃つ場所
         FIREWORKS_COLOR,  //花火の色
         SHOT_ANGLE,       //撃つ角度
-//        IS_APPLY_GRAVITY  //重力をかけるかどうか
+      //IS_APPLY_GRAVITY  //重力をかけるかどうか
+        FIREWORKS_SIZE    //花火のサイズ
     }
 
     //csvデータの要素数
-    const int CSVDATA_ELEMENTS = 5;
+    const int CSVDATA_ELEMENTS = 6;
     //花火の色のドットで区切った要素数
-    const int FIREWORKS_COLOR_ELEMENTS = 4;
+    //const int FIREWORKS_COLOR_ELEMENTS = 4;
 
     //csvから取り出した情報を入れる配列
     private CSVData[] csvData;
@@ -83,7 +85,7 @@ public class ReadCSV
             //文字列をEnumに変換
             csvData[i].fireｗorksType = FireworksTypeChecker(tempFireWorkstype);
 
-            csvData[i].shotPosition = Convert.ToInt16(didCommaSeparationData[(int)ElementsName.SHOT_POSITION])-1;
+            csvData[i].shotPosition = Convert.ToInt16(didCommaSeparationData[(int)ElementsName.SHOT_POSITION]) - 1;
 
             /*
             //使わなくなったが、Vector4に格納する方法のコード
@@ -111,7 +113,9 @@ public class ReadCSV
             //文字列を元にEnumに変換して格納
             csvData[i].shotAngle = FireworksAngleChecker(didCommaSeparationData[(int)ElementsName.SHOT_ANGLE]);
 
-//            csvData[i].isApplyGravity = Convert.ToBoolean(didCommaSeparationData[(int)ElementsName.IS_APPLY_GRAVITY]);
+            //csvData[i].isApplyGravity = Convert.ToBoolean(didCommaSeparationData[(int)ElementsName.IS_APPLY_GRAVITY]);
+
+            csvData[i].fireworksSize = Convert.ToSingle(didCommaSeparationData[(int)ElementsName.FIREWORKS_SIZE]);
         }
     }
 

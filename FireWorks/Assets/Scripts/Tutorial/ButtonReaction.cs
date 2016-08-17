@@ -37,7 +37,6 @@ public class ButtonReaction : MonoBehaviour
     //Easingをするために必要な起動時間
     private float startTime;
 
-
     void Start()
     {
         //Easingを始めるポジションの初期化
@@ -67,7 +66,7 @@ public class ButtonReaction : MonoBehaviour
                     //ボタンを１つ目から２つ目に変える
                     ChangeButtonUi();
                 }
-                else if (pageCount == 1)
+                else if (pageCount == 1 && !canEasing)
                 {
                     //Easing開始の許可
                     canEasing = true;
