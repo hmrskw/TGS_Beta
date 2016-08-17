@@ -19,6 +19,11 @@ public class FireWorks : MonoBehaviour
     [SerializeField]
     float speed;
 
+    [SerializeField, Tooltip("花火が打ちあがるときの振れ幅。")]
+    private float moveSpeed;
+
+    [SerializeField]
+    bool isDeflection;
     //[SerializeField, Tooltip("成功したときに発生させるパーティクル")]
     GameObject fireWorksImpact;
     public GameObject FireWorksImpact
@@ -35,6 +40,7 @@ public class FireWorks : MonoBehaviour
     //触れて爆発させる花火かどうか（使うかは不明）
     FIRE_WORKS_TYPE fireWorksType;
 
+    float deflection;
     //DataManager dataManager;
 
     //花火が不発かどうか
@@ -53,6 +59,7 @@ public class FireWorks : MonoBehaviour
 
     void Start()
     {
+        deflection = 0;
         fireWorksType = FIRE_WORKS_TYPE.NORMAL;
         isExploded = false;
 
@@ -60,7 +67,8 @@ public class FireWorks : MonoBehaviour
 
     void Update()
     {
-        transform.Translate(0, speed, 0);
+        if(isDeflection)deflection = Mathf.Sin(Time.frameCount * moveSpeed);
+        transform.Translate(deflection, speed, 0);
 
         lockOnMarker.SetActive(isExploded);
 
