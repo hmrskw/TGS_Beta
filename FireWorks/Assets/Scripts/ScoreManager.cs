@@ -9,6 +9,7 @@ public class ScoreManager : MonoBehaviour {
     public static int ExplosionNum { set { explosionNum = value; } get { return explosionNum; } }
 
     static int score;
+    public static int Score { private set { score = value; } get { return score; } }
 
     public static void init()
     {

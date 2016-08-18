@@ -19,17 +19,11 @@ public class FireWorks : MonoBehaviour
     [SerializeField]
     float speed;
 
-    [SerializeField, Tooltip("花火が打ちあがるときの振れ幅。")]
-    private float moveSpeed;
+    [SerializeField, Tooltip("花火が打ちあがるときの振れ幅")]
+    float moveSpeed;
 
     [SerializeField]
     bool isDeflection;
-    //[SerializeField, Tooltip("成功したときに発生させるパーティクル")]
-    GameObject fireWorksImpact;
-    public GameObject FireWorksImpact
-    {
-        set { fireWorksImpact = value; }
-    }
 
     [SerializeField, Tooltip("失敗したときに発生させるパーティクル")]
     GameObject smoke;
@@ -37,11 +31,21 @@ public class FireWorks : MonoBehaviour
     [SerializeField]
     GameObject lockOnMarker;
 
+    GameObject fireWorksImpact;
+    public GameObject FireWorksImpact
+    {
+        set { fireWorksImpact = value; }
+    }
+
+    float size;
+    public float Size
+    {
+        set { size = 0.5f + value; }
+    }
     //触れて爆発させる花火かどうか（使うかは不明）
     FIRE_WORKS_TYPE fireWorksType;
 
     float deflection;
-    //DataManager dataManager;
 
     //花火が不発かどうか
     private bool isExploded;
@@ -51,6 +55,7 @@ public class FireWorks : MonoBehaviour
         set { isExploded = value; }
     }
 
+    //何番目にロックオンされたか
     private int exploadOrderNumber;
     public int ExploadOrderNumber
     {
@@ -62,7 +67,7 @@ public class FireWorks : MonoBehaviour
         deflection = 0;
         fireWorksType = FIRE_WORKS_TYPE.NORMAL;
         isExploded = false;
-
+        //size = 1;
     }
 
     void Update()
@@ -102,7 +107,7 @@ public class FireWorks : MonoBehaviour
                 else if (fireWorksType == FIRE_WORKS_TYPE.IGNORE)
                 {
                     transform.position += new Vector3(0, 1, 0);
-                    Explosion(5);
+                    Explosion(0);
                 }
             }
         }
@@ -117,7 +122,7 @@ public class FireWorks : MonoBehaviour
         {
             if (fireWorksType == FIRE_WORKS_TYPE.NORMAL)
             {
-                Explosion((int)this.transform.position.y);
+                Explosion(1);
             }
             else if (fireWorksType == FIRE_WORKS_TYPE.IGNORE)
             {
@@ -149,9 +154,13 @@ public class FireWorks : MonoBehaviour
         //スコアを加算
         //dataManager.AddScore(score);
         //}
-        ScoreManager.AddScore(score);
+        ScoreManager.AddScore(score + exploadOrderNumber);
+
         //花火のパーティクルを生成
         GameObject fireworksParticle = Instantiate(fireWorksImpact, transform.position, Quaternion.Euler(0, 0, 0)) as GameObject;
+
+        //大きさを変える
+        fireworksParticle.transform.localScale *= size;
         //花火の色を設定
         //fireworksParticle.GetComponent<Particle>().setColor(this.GetComponent<Renderer>().material.color);
     }

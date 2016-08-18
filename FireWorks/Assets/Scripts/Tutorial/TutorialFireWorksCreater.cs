@@ -56,7 +56,10 @@ public class TutorialFireWorksCreater : MonoBehaviour
                 fireWorks = seedObj.GetComponent<FireWorks>();
 
                 if (fireWorks != null)
+                {
                     fireWorks.FireWorksImpact = fireWorksImpact;
+                    fireWorks.Size = 0.5f;
+                }
             }
             time = 0;
         }

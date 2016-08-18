@@ -32,9 +32,6 @@ public class ChangeButtonIconSprite : MonoBehaviour
 
     void Start()
     {
-        Debug.Log("kita");
-
-
         viewIcon = GetComponent<Image>();
         
         viewIcon.sprite = buttonIcon[0];
@@ -44,8 +41,6 @@ public class ChangeButtonIconSprite : MonoBehaviour
 
     IEnumerator SpriteChangeTimer()
     {
-        Debug.Log("kita2");
-
         while (true)
         {
             viewIcon.sprite = buttonIcon[1];

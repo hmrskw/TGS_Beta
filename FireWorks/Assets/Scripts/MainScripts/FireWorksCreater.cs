@@ -90,7 +90,7 @@ public class FireWorksCreater : MonoBehaviour
             //CsvDataの配列長さを超えていないかのチェック
             if (readCSV.CsvData.Length > readFireworksNumber)
             {
-                if (!ReceivedZKOO.GetHand(ReceivedZKOO.HAND.RIGHT).isTouching) LockOnNumber = 0;
+                if (ReceivedZKOO.GetHand(ReceivedZKOO.HAND.RIGHT).isTouching == false) LockOnNumber = 0;
 
                 //発射時間が現在の経過時間と同じときの処理
                 while (readCSV.CsvData[readFireworksNumber].shotTiming <= time)
@@ -120,8 +120,8 @@ public class FireWorksCreater : MonoBehaviour
 
                         fireWorks.FireWorksImpact = fireWorksImpact
                             [(int)readCSV.CsvData[readFireworksNumber].fireｗorksType]
-                            .Color[readCSV.CsvData[readFireworksNumber].fireworksColor];
-
+                            .Color[readCSV.CsvData[readFireworksNumber].fireworksColor % fireWorksImpact[(int)readCSV.CsvData[readFireworksNumber].fireｗorksType].Color.Length];
+                        fireWorks.Size = readCSV.CsvData[readFireworksNumber].fireworksSize;
 /*                        switch (readCSV.CsvData[readFireworksNumber].fireｗorksType)
                         {
                             case EnumDefinition.FireｗorksType.BOTAN:
@@ -147,13 +147,13 @@ public class FireWorksCreater : MonoBehaviour
                                 break;
                         }
 */
-                        //CSVの色の設定に合わせて色を変更
-                        //fireWorks.setColor(readCSV.CsvData[readFireworksNumber].fireworksColor);
-                        //重力を使用する場合はRigidbodyをつける
-                        //if (readCSV.CsvData[readFireworksNumber].isApplyGravity)
-                        //{
-                            //seedObj.AddComponent<Rigidbody>();
-                        //}
+//CSVの色の設定に合わせて色を変更
+//fireWorks.setColor(readCSV.CsvData[readFireworksNumber].fireworksColor);
+//重力を使用する場合はRigidbodyをつける
+//if (readCSV.CsvData[readFireworksNumber].isApplyGravity)
+//{
+//seedObj.AddComponent<Rigidbody>();
+//}
                     }
 
                     //飛ばす花火を更新

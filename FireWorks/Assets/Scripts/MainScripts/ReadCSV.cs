@@ -70,7 +70,7 @@ public class ReadCSV
 
         //CSVデータを区切る文字
         char[] commaSpliter = { ',' };
-        char[] dotSpliter = { '.' };
+//        char[] dotSpliter = { '.' };
 
         for (int i = 0; i < lines.Length; i++)
         {

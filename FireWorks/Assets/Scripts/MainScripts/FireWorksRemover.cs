@@ -18,13 +18,19 @@ public class FireWorksRemover : MonoBehaviour {
                 break;
             }
         }
-        audioSource.Play();
+        StartCoroutine(playAudio());
 	}
 	
 	void Update () {
-        if (impact.isPlaying == false)
+        if (impact.isPlaying == false && audioSource.isPlaying == false)
         {
             Destroy(this.gameObject);
         }
 	}
+
+    IEnumerator playAudio()
+    {
+        yield return new WaitForSeconds(0.5f);
+        audioSource.Play();
+    }
 }
