@@ -38,19 +38,30 @@ public class ButtonReaction : MonoBehaviour
     //Easingをするために必要な起動時間
     private float startTime;
 
+    //「次へ」アイコンのマテリアル変更用
+    private Material pageTurnOverButtonIconMaterial;
+
     void Start()
-    {
+    {   
         //Easingを始めるポジションの初期化
         startPosition[0] = signborad.transform.position;
         startPosition[1] = pageTurnOverButton[0].transform.position;
+
+        //「次へ」アイコンのマテリアルを取得
+        pageTurnOverButtonIconMaterial = pageTurnOverButton[0].GetComponent<Renderer>().material;
     }
 
     void Update()
     {
-        if (/*ReceivedZKOO.GrippedHand()*/Input.GetMouseButtonDown(0))
+        if (/*ReceivedZKOO.GrippedHand()*/RayCast())
         {
+            //レイが当たったら次へアイコンの色を変更
+            //TIPS：色は現在適当なのでのちのち変更する
+            pageTurnOverButtonIconMaterial.color = new Color(255f, 0f, 0f);
+
+
             //TIPS:現在はスペースキーで反応するためEasingが連打可能になっている
-            if (RayCast())
+            if (Input.GetMouseButtonDown(0))
             {
                 if (pageCount == 0)
                 {
@@ -82,6 +93,11 @@ public class ButtonReaction : MonoBehaviour
                     }
                 }
             }
+        }
+        else
+        {
+            //光が当たっていないときは真っ白にする
+            pageTurnOverButtonIconMaterial.color = new Color(255f, 255f, 255f);
         }
 
         signborad.transform.rotation = Quaternion.Slerp(signborad.transform.rotation, Quaternion.Euler(0, 0, 120 * pageCount), 0.07f);
