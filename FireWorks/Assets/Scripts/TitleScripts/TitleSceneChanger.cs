@@ -5,19 +5,20 @@ using UnityEngine.SceneManagement;
 
 public class TitleSceneChanger : MonoBehaviour, ISceneBase
 {
-    enum MouseButtonNumber
-    {
-        LEFT_BUTTON = 0,
-        RIGHT_BUTTON
-    }
-
     void Update()
     {
-        if (ReceivedZKOO.isGripped(ReceivedZKOO.HAND.RIGHT))
+ /*       //FIX:タイトルだけ手のIDが反転する（原因不明）
+        if (ReceivedZKOO.OpenHand(ReceivedZKOO.HAND.RIGHT))
         {
+            ReceivedZKOO.Handedness = ReceivedZKOO.HAND.LEFT;
             SceneChange("Tutorial");
         }
-    }
+        else if (ReceivedZKOO.OpenHand(ReceivedZKOO.HAND.LEFT))
+        {
+            ReceivedZKOO.Handedness = ReceivedZKOO.HAND.RIGHT;
+            SceneChange("Tutorial");
+        }
+*/    }
 
     public void SceneChange(string nextSceneName)
     {

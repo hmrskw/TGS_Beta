@@ -36,7 +36,7 @@ public class DataManager : MonoBehaviour {
     public bool IsGameEnd{get {return isGameEnd;}}
 
     MainSceneChanger mSceneChanger;
-    // Use this for initialization
+
     void Start () {
         mSceneChanger = new MainSceneChanger();
         resultPanel.SetActive(false);
@@ -46,7 +46,6 @@ public class DataManager : MonoBehaviour {
         score = 0;
 	}
 
-    // Update is called once per frame
     void Update()
     {
         if (!isGameEnd)
@@ -78,7 +77,7 @@ public class DataManager : MonoBehaviour {
                     resultPanel.SetActive(true);
                 }
             }
-            if (ReceivedZKOO.GetHand(ReceivedZKOO.HAND.RIGHT).isTouching)
+            if (/*ReceivedZKOO.GetHand().isTouching*/Input.GetMouseButton(0))
             {
                 mSceneChanger.SceneChange("Result");
             }

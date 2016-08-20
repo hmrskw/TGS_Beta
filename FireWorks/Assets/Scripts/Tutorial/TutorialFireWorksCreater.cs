@@ -13,6 +13,9 @@ public class TutorialFireWorksCreater : MonoBehaviour
     [SerializeField, Tooltip("爆発")]
     GameObject fireWorksImpact;
 
+    [SerializeField]
+    GameObject hitEffect;
+
     [SerializeField, Tooltip("何秒に一度発射するか")]
     float frequency;
      
@@ -39,7 +42,7 @@ public class TutorialFireWorksCreater : MonoBehaviour
         //時間の更新
         time += Time.deltaTime;
 
-        if (!ReceivedZKOO.GetHand(ReceivedZKOO.HAND.RIGHT).isTouching) LockOnNumber = 0;
+        if (/*!ReceivedZKOO.GetHand().isTouching*/!Input.GetMouseButton(0)) LockOnNumber = 0;
 
         if (time > frequency)
         {
@@ -68,9 +71,8 @@ public class TutorialFireWorksCreater : MonoBehaviour
     void RayCast()
     {
         //カメラの場所からポインタの場所に向かってレイを飛ばす
-        Ray ray = Camera.main.ScreenPointToRay(new Vector2(ReceivedZKOO.GetHand(ReceivedZKOO.HAND.RIGHT).position.x, ReceivedZKOO.GetHand(ReceivedZKOO.HAND.RIGHT).position.y + Screen.height));
+        Ray ray = Camera.main.ScreenPointToRay(/*new Vector2(ReceivedZKOO.GetHand().position.x, ReceivedZKOO.GetHand().position.y + Screen.height)*/Input.mousePosition);
         RaycastHit hit = new RaycastHit();
-        Debug.DrawRay(ray.origin, ray.direction * 100, Color.red);
 
         //レイが何か当たっているかを調べる
         if (Physics.Raycast(ray, out hit))
@@ -83,6 +85,7 @@ public class TutorialFireWorksCreater : MonoBehaviour
             {
                 fireWorks.ExploadOrderNumber = LockOnNumber++;
                 fireWorks.IsExploded = true;
+                Instantiate(hitEffect, obj.transform.position, Quaternion.Euler(0, 0, 0));
             }
         }
     }

@@ -14,16 +14,12 @@ public class Gallery : MonoBehaviour {
     [SerializeField,Range(1f,5f)]
     float moveTime;
 
-    [SerializeField]
-    bool isDelay;
-
     float totalFireWorksNum;
     float scoreRate;
 
     Vector3[] startPosition;
     Vector3[] endPosition;
     float[] startTime;
-    float[] delay;
      
     void Start () {
         totalFireWorksNum = ScoreManager.TotalFireWorksNum;
@@ -32,7 +28,6 @@ public class Gallery : MonoBehaviour {
         startPosition = new Vector3[gallerys.Length];
         endPosition = new Vector3[gallerys.Length];
         startTime = new float[gallerys.Length];
-        delay = new float[gallerys.Length];
 
         for (int i = 0; i < gallerys.Length; i++)
         {
@@ -40,8 +35,6 @@ public class Gallery : MonoBehaviour {
             startPosition[i] = endPosition[i] + differenceBeforePos;
             gallerys[i].transform.localPosition = startPosition[i];
             gallerys[i].SetActive(false);
-            delay[i] = 0;
-            if (isDelay) delay[i] = Random.Range(-1f, 0);
         }
     }
 
@@ -54,7 +47,6 @@ public class Gallery : MonoBehaviour {
                 if (scoreRate > (1f / gallerys.Length) * i)
                 {
                     startTime[i] = Time.timeSinceLevelLoad;
-                    if (isDelay) startTime[i] -= delay[i];
                     gallerys[i].SetActive(true);
                 }
             }
@@ -71,14 +63,7 @@ public class Gallery : MonoBehaviour {
 
         if (diff > moveTime)
         {
-            /*if (isLoop)
-            {
-                startTime[galleryID] = Time.timeSinceLevelLoad;
-            }
-            else
-            {*/
             obj.transform.localPosition = endPosition[galleryID];
-            //}
         }
 
         var rate = diff / moveTime;

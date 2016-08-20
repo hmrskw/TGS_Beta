@@ -15,13 +15,12 @@ public class StarMain : MonoBehaviour {
     [SerializeField, Tooltip("爆発する回数")]
     private int num = 0;
 
-    private float time = 0;
+    //private float time = 0;
 
-    private Vector3 pos;
+    //private Vector3 pos;
 
     void Start () {
-        pos = transform.position;
-
+        //pos = transform.position;
         StartCoroutine(Impact());
     }
 
@@ -32,7 +31,7 @@ public class StarMain : MonoBehaviour {
             Vector3 variation = new Vector3(Random.Range(min.x, max.x), Random.Range(min.y, max.y), Random.Range(min.z, max.z));
             int colorType = Random.Range(0, effect.Length);
             Instantiate(effect[colorType],
-                pos + variation,
+                transform.position + variation,
                 Quaternion.identity);
             yield return new WaitForSeconds(durationTime);
         }

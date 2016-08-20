@@ -16,15 +16,13 @@ public class ResultManager : MonoBehaviour {
     GameObject stage;
 
     [SerializeField]
+    GameObject bord;
+
+    [SerializeField]
     GameObject[] evalutionImpact;
-    //[SerializeField]
-    //Vector3 differenceBeforePos;
 
-    //[SerializeField, Tooltip("Easingに使う")]
-    //private AnimationCurve curve;
-
-    //[SerializeField, Range(1f, 5f)]
-    //float moveTime;
+    [SerializeField]
+    GameObject scoreText;
 
     [SerializeField]
     bool isDelay;
@@ -54,23 +52,19 @@ public class ResultManager : MonoBehaviour {
     [SerializeField]
     Vector3 impactPosition;
 
-    //float totalFireWorksNum;
     float scoreRate;
 
     Easing[] gallerysEasing;
     Easing stageEasing;
+    Easing bordEasing;
+
 
     float[] delay;
 
-
-    // Use this for initialization
     void Start () {
         scoreRate = (float)ScoreManager.ExplosionNum / (float)ScoreManager.TotalFireWorksNum;
 
         gallerysEasing = new Easing[gallerys.Length];
-        //startPosition = new Vector3[gallerys.Length];
-        //endPosition = new Vector3[gallerys.Length];
-        //startTime = new float[gallerys.Length];
         delay = new float[gallerys.Length];
 
         for (int i = 0; i < gallerys.Length; i++)
@@ -92,20 +86,24 @@ public class ResultManager : MonoBehaviour {
         stageEasing.endPosition = stage.transform.position;
         stageEasing.startPosition = stageEasing.endPosition + easingData[1].DifferenceBeforePos;
         stageEasing.startTime = Time.timeSinceLevelLoad;
+
+        bordEasing.endPosition = bord.transform.position;
+        bordEasing.startPosition = bordEasing.endPosition - easingData[1].DifferenceBeforePos;
+        bordEasing.startTime = Time.timeSinceLevelLoad;
+
+        bord.SetActive(false);
         stage.SetActive(false);
+        scoreText.SetActive(false);
 
         StartCoroutine(ResultUpdate());
 	}
 
     IEnumerator ResultUpdate()
     {
-//        while (true)
-//        {
             yield return StartCoroutine(MoveGallery());
             yield return StartCoroutine(PopStage());
             yield return new WaitForSeconds(0.5f);
             yield return StartCoroutine(ImpactResultFireworks());
-//        }
     }
 
     IEnumerator MoveGallery()
@@ -136,19 +134,18 @@ public class ResultManager : MonoBehaviour {
     IEnumerator PopStage()
     {
         stage.SetActive(true);
+        bord.SetActive(true);
         while (true)
         {
             var diff = Time.timeSinceLevelLoad - stageEasing.startTime;
 
-            if (diff > easingData[1].MoveTime)
-            {
-                break;
-            }
+            if (diff > easingData[1].MoveTime)break;
 
             var rate = diff / easingData[1].MoveTime;
             var pos = easingData[1].Curve.Evaluate(rate);
 
             stage.transform.position = Vector3.Lerp(stageEasing.startPosition, stageEasing.endPosition, pos);
+            bord.transform.position = Vector3.Lerp(bordEasing.startPosition, bordEasing.endPosition, pos);
             yield return null;
         }
         yield return null;
@@ -156,8 +153,7 @@ public class ResultManager : MonoBehaviour {
 
     IEnumerator ImpactResultFireworks()
     {
-        var rate = (float)ScoreManager.ExplosionNum / (float)ScoreManager.TotalFireWorksNum;
-        Debug.Log(ScoreManager.Score * ((float)ScoreManager.ExplosionNum / (float)ScoreManager.TotalFireWorksNum) +"\n"+ (float)(ScoreManager.TotalFireWorksNum * 2) / 3);
+        scoreText.SetActive(true);
         for (int i = evalutionImpact.Length-1; i >= 0; i--)
         {
             if (ScoreManager.Score* ((float)ScoreManager.ExplosionNum / (float)ScoreManager.TotalFireWorksNum) >= (float)(ScoreManager.TotalFireWorksNum*2)/3*i) {
@@ -167,64 +163,4 @@ public class ResultManager : MonoBehaviour {
         }
         yield return null;
     }
-
-/*
-    void Start()
-    {
-        totalFireWorksNum = ScoreManager.TotalFireWorksNum;
-        scoreRate = 0;
-
-        startPosition = new Vector3[gallerys.Length];
-        endPosition = new Vector3[gallerys.Length];
-        startTime = new float[gallerys.Length];
-        delay = new float[gallerys.Length];
-
-        for (int i = 0; i < gallerys.Length; i++)
-        {
-            endPosition[i] = gallerys[i].transform.localPosition;
-            startPosition[i] = endPosition[i] + differenceBeforePos;
-            gallerys[i].transform.localPosition = startPosition[i];
-            gallerys[i].SetActive(false);
-            delay[i] = 0;
-            if (isDelay) delay[i] = Random.Range(-1f, 0);
-        }
-    }
-
-    void Update()
-    {
-        scoreRate = (float)ScoreManager.ExplosionNum / totalFireWorksNum;
-        for (int i = 0; i < gallerys.Length; i++)
-        {
-            if (gallerys[i].activeInHierarchy == false)
-            {
-                if (scoreRate > (1f / gallerys.Length) * i)
-                {
-                    startTime[i] = Time.timeSinceLevelLoad;
-                    if (isDelay) startTime[i] -= delay[i];
-                    gallerys[i].SetActive(true);
-                }
-            }
-            else
-            {
-                MoveGallery(gallerys[i], i);
-            }
-        }
-    }
-
-    void MoveGallery(GameObject obj, int galleryID)
-    {
-        var diff = Time.timeSinceLevelLoad - startTime[galleryID];
-
-        if (diff > moveTime)
-        {
-
-            obj.transform.localPosition = endPosition[galleryID];
-        }
-
-        var rate = diff / moveTime;
-        var pos = curve.Evaluate(rate);
-
-        obj.transform.localPosition = Vector3.Lerp(startPosition[galleryID], endPosition[galleryID], pos);
-    }
-    */
 }

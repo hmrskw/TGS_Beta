@@ -30,7 +30,8 @@ public class ButtonReaction : MonoBehaviour
     private int pageCount = 0;
 
     //看板を回転させていいかどうか
-    private bool canRotation = false;
+    //private bool canRotation = false;
+    
     //Easingを始めていいかどうか
     private bool canEasing = false;
 
@@ -46,42 +47,51 @@ public class ButtonReaction : MonoBehaviour
 
     void Update()
     {
-        //FIX:ZKOOの反応がおかしいので、スペースキーで代用している
-        if (ReceivedZKOO.isGripped(ReceivedZKOO.HAND.RIGHT))
+        if (/*ReceivedZKOO.GrippedHand()*/Input.GetMouseButtonDown(0))
         {
-            // Debug.Log("押された");
             //TIPS:現在はスペースキーで反応するためEasingが連打可能になっている
-            if (/*Input.GetKeyDown(KeyCode.Space))*/RayCast())
+            if (RayCast())
             {
-                //Debug.Log("当たった");
-                
                 if (pageCount == 0)
                 {
-                    //Debug.Log("入った");
 
                     //ページを次のページに変更
-                    pageCount = 1;
+                    pageCount++;
                     //看板の回転を許可
-                    canRotation = true;
+                    //canRotation = true;
                     //ボタンを１つ目から２つ目に変える
                     ChangeButtonUi();
                 }
-                else if (pageCount == 1 && !canEasing)
+                /*else if (pageCount == 1)
                 {
-                    //Easing開始の許可
-                    canEasing = true;
-                    //Easingの開始始時間の保存
-                    startTime = Time.timeSinceLevelLoad;
+                    //ページを次のページに変更
+                    pageCount++;
+                    //看板の回転を許可
+                    //canRotation = true;
+                    //ボタンを１つ目から２つ目に変える
+                    ChangeButtonUi();
+                }*/
+                else
+                {
+                    if (!canEasing)
+                    {
+                        //Easing開始の許可
+                        canEasing = true;
+                        //Easingの開始始時間の保存
+                        startTime = Time.timeSinceLevelLoad;
+                    }
                 }
             }
         }
 
-        if (canRotation)
+        signborad.transform.rotation = Quaternion.Slerp(signborad.transform.rotation, Quaternion.Euler(0, 0, 120 * pageCount), 0.07f);
+
+/*        if (canRotation)
         {
             //看板の回転
             RotationSignboard();
         }
-
+        */
         if(canEasing)
         {
             //看板とボタンをEasingで画面外に出して、
@@ -90,20 +100,24 @@ public class ButtonReaction : MonoBehaviour
         }
     }
 
-    private void RotationSignboard()
+    /*private void RotationSignboard()
     {
         //  signborad.transform.Rotate(new Vector3(0, 0, 1), 180);
 
-        if (signborad.transform.rotation.z < 180)
+        if (pageCount == 1)
         {
-            signborad.transform.rotation = Quaternion.Slerp(signborad.transform.rotation, Quaternion.Euler(0, 0, 180), 0.07f);
+            signborad.transform.rotation = Quaternion.Slerp(signborad.transform.rotation, Quaternion.Euler(0, 0, 120), 0.07f);
+        }
+        else if (pageCount == 2)
+        {
+            signborad.transform.rotation = Quaternion.Slerp(signborad.transform.rotation, Quaternion.Euler(0, 0, 240), 0.07f);
         }
         else
         {
             canRotation = false;
             //tutorialSceneChanger.SceneChange("Main");
         }
-    }
+    }*/
 
     private void ChangeButtonUi()
     {
@@ -138,7 +152,7 @@ public class ButtonReaction : MonoBehaviour
     bool RayCast()
     {
         //カメラの場所からポインタの場所に向かってレイを飛ばす
-        Ray ray = Camera.main.ScreenPointToRay(new Vector2(ReceivedZKOO.GetHand(ReceivedZKOO.HAND.RIGHT).position.x, ReceivedZKOO.GetHand(ReceivedZKOO.HAND.RIGHT).position.y + Screen.height));
+        Ray ray = Camera.main.ScreenPointToRay(/*new Vector2(ReceivedZKOO.GetHand().position.x, ReceivedZKOO.GetHand().position.y + Screen.height)*/Input.mousePosition);
         RaycastHit hit = new RaycastHit();
 
         //レイが何か当たっているかを調べる

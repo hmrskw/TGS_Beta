@@ -9,6 +9,8 @@ using System.Text;
 public class ReceivedZKOO : MonoBehaviour {
     const int HAND_NUM = 2;
 
+    public Text debugText;
+
     public enum HAND
     {
         RIGHT = 0,
@@ -43,7 +45,16 @@ public class ReceivedZKOO : MonoBehaviour {
     }
 
     private static ZKOOHandData[] hand = new ZKOOHandData[HAND_NUM];
-    private static bool nowGripped = false; 
+    private static bool nowGripped;
+
+    private static int handedness;
+    public static HAND Handedness
+    {
+        set {
+            Debug.Log(handedness+"="+value);
+            handedness = (int)value;
+        }
+    }
 
     private System.Net.Sockets.UdpClient udpClient = null;
 
@@ -121,6 +132,7 @@ public class ReceivedZKOO : MonoBehaviour {
             hand[0].rotation = 0.0f;
         }
         drawPointer();
+        debugText.text = frameCount.ToString();
     }
 
     //アプリが終了されたとき
@@ -133,6 +145,9 @@ public class ReceivedZKOO : MonoBehaviour {
         }
     }
 
+    int frameCount = 0;
+    bool nowReceiving = false;
+
     //データの受信
     private void ReceiveCallback(IAsyncResult ar)
     {
@@ -144,6 +159,13 @@ public class ReceivedZKOO : MonoBehaviour {
         //非同期受信
         try
         {
+            if (nowReceiving == true)
+            {
+                return;
+                //frameCount++;
+            }
+            nowReceiving = true;
+
             IPEndPoint remoteEP = null;
             //データを受け取る
             byte[] rcvBytes = null;
@@ -157,6 +179,7 @@ public class ReceivedZKOO : MonoBehaviour {
         catch (System.Net.Sockets.SocketException ex)
         {
             Console.WriteLine("受信エラー({0}/{1})", ex.Message, ex.ErrorCode);
+            nowReceiving = false;
             return;
         }
         //すでに通信用のソケットが閉じられていたとき
@@ -164,8 +187,10 @@ public class ReceivedZKOO : MonoBehaviour {
         {
             //すでに閉じている時は終了
             Console.WriteLine("Socketは閉じられています。" + ex);
+            nowReceiving = false;
             return;
         }
+        nowReceiving = false;
     }
 
     //受信したデータをZKOOHandDataに変換する
@@ -194,11 +219,10 @@ public class ReceivedZKOO : MonoBehaviour {
                 string[] handPosition = new string[2];
                 handPosition = DataSeparation(data[2], separationDot, 2);
 
-                hand[i].position = new Vector2(Convert.ToSingle(handPosition[0])-Screen.width*0.5f, (-1 * Convert.ToSingle(handPosition[1]))+Screen.height * 0.5f);
+                hand[i].position = new Vector2(Convert.ToSingle(handPosition[0])-Screen.width*0.25f, (-1 * Convert.ToSingle(handPosition[1]))+Screen.height*0.25f);
 
                 hand[i].rotation = Convert.ToSingle(data[3]);
             }
-//            hand[0].rotation *= -1;
         }
     }
 
@@ -244,21 +268,26 @@ public class ReceivedZKOO : MonoBehaviour {
         return hand[(int)handID];
     }
 
-    public static bool isGripped(HAND handID)
+    public static ZKOOHandData GetHand()
+    {
+        return hand[handedness];
+    }
+
+    public static bool GrippedHand(HAND handID )
     {
         bool gripped = (hand[(int)handID].isTouching == true && nowGripped == false);
 
         nowGripped = hand[(int)handID].isTouching;
+        
+        return gripped;
+    }
+
+    public static bool GrippedHand()
+    {
+        bool gripped = (hand[handedness].isTouching == true && nowGripped == false);
+
+        nowGripped = hand[handedness].isTouching;
 
         return gripped;
     }
-    //public static ZKOOHandData GetRightHand(HAND handID)
-    //{
-    //    return hand[(int)handID];
-    //}
-
-    //public static ZKOOHandData GetLeftHand()
-    //{
-    //    return hand[1];
-    //}
 }

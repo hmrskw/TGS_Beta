@@ -27,7 +27,7 @@ public class ReadCSV
         SHOT_POSITION,    //撃つ場所
         FIREWORKS_COLOR,  //花火の色
         SHOT_ANGLE,       //撃つ角度
-      //IS_APPLY_GRAVITY  //重力をかけるかどうか
+        //IS_APPLY_GRAVITY,  //重力をかけるかどうか
         FIREWORKS_SIZE    //花火のサイズ
     }
 
@@ -146,7 +146,6 @@ public class ReadCSV
 
         //リターン値。カンマ分けしたデータを一行分格納する。
         string[] CommaSeparationData = new string[trialNumber_];
-
         for (int i = 0; i < trialNumber_; i++)
         {
             //１行にあるCsvDataの要素数分準備する

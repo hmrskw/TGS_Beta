@@ -67,32 +67,18 @@ public class FireWorks : MonoBehaviour
         deflection = 0;
         fireWorksType = FIRE_WORKS_TYPE.NORMAL;
         isExploded = false;
-        //size = 1;
     }
 
     void Update()
     {
-        if(isDeflection)deflection = Mathf.Sin(Time.frameCount * moveSpeed);
-        transform.Translate(deflection, speed, 0);
+        if(isDeflection)deflection = Mathf.Sin(Time.frameCount*1.2f);
+        transform.Translate(deflection* moveSpeed, speed, 0);
+        lockOnMarker.transform.Translate(-deflection * moveSpeed, 0, 0);
 
         lockOnMarker.SetActive(isExploded);
 
-        if (isExploded && ReceivedZKOO.GetHand(ReceivedZKOO.HAND.RIGHT).isTouching == false)
+        if (isExploded && /*ReceivedZKOO.GetHand().isTouching*/Input.GetMouseButton(0) == false)
         {
-            /*
-            //不発状態でない玉がボーダーライン超えていたとき
-            if (transform.position.y > borderLine)
-            {
-                if (fireWorksType == FIRE_WORKS_TYPE.NORMAL)
-                {
-                    Explosion((int)this.transform.position.y);
-                }
-                else if (fireWorksType == FIRE_WORKS_TYPE.IGNORE)
-                {
-                    Miss();
-                }
-            }
-            */
             StartCoroutine(expload());
         }
         else
@@ -132,28 +118,12 @@ public class FireWorks : MonoBehaviour
         yield return null;
     }
 
-    //データマネージャ－のパスを受け取る
-    //public void SetDataManager(DataManager dataManager)
-    //{
-        //this.dataManager = dataManager;
-    //}
-
-    //色の変更
-    //public void setColor(Vector4 color)
-    //{
-        //this.GetComponent<Renderer>().material.color = color;
-    //}
-
     //爆発したときの処理
     private void Explosion(int score)
     {
         //FireworksSeedを削除
         Destroy(this.gameObject);
-        //if (dataManager != null)
-        //{
-        //スコアを加算
-        //dataManager.AddScore(score);
-        //}
+
         ScoreManager.AddScore(score + exploadOrderNumber);
 
         //花火のパーティクルを生成
@@ -161,8 +131,6 @@ public class FireWorks : MonoBehaviour
 
         //大きさを変える
         fireworksParticle.transform.localScale *= size;
-        //花火の色を設定
-        //fireworksParticle.GetComponent<Particle>().setColor(this.GetComponent<Renderer>().material.color);
     }
 
     private void Miss()
