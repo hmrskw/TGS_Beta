@@ -1,46 +1,56 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class HandIconMover : MonoBehaviour
+public class ButtonScalingChanger : MonoBehaviour
 {
     [SerializeField]
     private AnimationCurve curve;
 
-    [SerializeField,Tooltip("目的地までの距離")]
-    private Vector3 endPositionDistance;
+    [SerializeField, Tooltip("目的サイズまでの間隔")]
+    private Vector3 endSizeDistance;
 
-    [SerializeField, Tooltip("目的地にたどり着くまでの時間"), Range(0.1f, 5.0f)]
+    [SerializeField, Tooltip("最大値になるまでの時間"), Range(0.1f, 5.0f)]
     private float moveTime;
-    
+
     //Easingのスタートポジション
-    private Vector3 startPosition;
+    private Vector3 startSize;
     //Easingのエンドポジション
-    private Vector3 endPosition;
+    private Vector3 endSize;
+
     //Easingの起動し始める時間
     private float startTime;
     //Easingを行っていいかどうか
     private bool canEasing = true;
 
+    //シーンの変更が入っていないかどうか
+    private bool isChangeScene = false;
+
+    private Material startIconMaterial;
+
     void Start()
     {
         //初期位置設定
-        startPosition = this.transform.position;
+        startSize = transform.localScale;
         //目的地の設定
         //※あえてendPositionDistanceを作ったのは、
         //子オブジェクトのローカル座標を基準にEasingさせたかったため
-        endPosition += new Vector3(this.transform.position.x + endPositionDistance.x,
-                                   this.transform.position.y + endPositionDistance.y,
-                                   this.transform.position.z + endPositionDistance.z);
+        endSize += new Vector3(this.transform.localScale.x + endSizeDistance.x,
+                               this.transform.localScale.y + endSizeDistance.y,
+                               this.transform.localScale.z + endSizeDistance.z);
         //起動する時間の設定
         startTime = Time.timeSinceLevelLoad;
+
+        startIconMaterial = GetComponent<Renderer>().material;
     }
 
     void Update()
     {
         //Rayが当たっている場合は、Easingをストップし、
         //当たっていない場合は常にEasingを行う
-        if (!RayCast())
+        if (!RayCast() && !isChangeScene)
         {
+            startIconMaterial.color = new Color(255f, 255f, 255f);
+
             if (!canEasing)
             {
                 canEasing = true;
@@ -51,9 +61,18 @@ public class HandIconMover : MonoBehaviour
                 RoundTripEasing(startTime);
             }
         }
-        if(RayCast())
+
+        if (RayCast())
         {
             canEasing = false;
+
+            startIconMaterial.color = new Color(255f, 0f, 0f);
+
+            if(Input.GetMouseButtonDown(0))
+            {
+                isChangeScene = true;
+            }
+
         }
     }
     //第一引数……動かし始める時間
@@ -64,15 +83,15 @@ public class HandIconMover : MonoBehaviour
 
         if (diff > moveTime)
         {
-            this.transform.position = endPosition;
-            
+            transform.localScale = endSize;
+
             canEasing = false;
         }
 
         var rate = diff / moveTime;
         var pos = curve.Evaluate(rate);
 
-        this.transform.position = Vector3.Lerp(startPosition, endPosition, pos);
+        transform.localScale = Vector3.Lerp(startSize, endSize, pos);
 
         if (rate >= 1)
         {
