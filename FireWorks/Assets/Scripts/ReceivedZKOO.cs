@@ -51,7 +51,7 @@ public class ReceivedZKOO : MonoBehaviour {
     public static HAND Handedness
     {
         set {
-            Debug.Log(handedness+"="+value);
+            //Debug.Log(handedness+"="+value);
             handedness = (int)value;
         }
     }

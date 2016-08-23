@@ -123,7 +123,6 @@ public class FireWorks : MonoBehaviour
     {
         //FireworksSeedを削除
         Destroy(this.gameObject);
-
         ScoreManager.AddScore(score + exploadOrderNumber);
 
         //花火のパーティクルを生成

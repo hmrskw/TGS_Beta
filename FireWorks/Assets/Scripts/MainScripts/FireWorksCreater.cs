@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.UI;
 
 public class FireWorksCreater : MonoBehaviour
 {
@@ -10,6 +11,12 @@ public class FireWorksCreater : MonoBehaviour
     }
     [SerializeField, Tooltip("時間制限")]
     int timeLimit;
+
+    [SerializeField]
+    Slider timeBar;
+
+	[SerializeField, Tooltip("制限時間が来たら飛ぶ花火")]
+	GameObject endFireworksSeed;
 
     [SerializeField, Tooltip("玉が発射される位置")]
     Vector3[] fireWorksInitPosition = new Vector3[5];
@@ -53,10 +60,12 @@ public class FireWorksCreater : MonoBehaviour
 
     int LockOnNumber;
 
+	GameObject endFireworks;
+
     //現在何番目（CSVの何行目）の花火を飛ばしているか
     int readFireworksNumber;
 
-    MainSceneChanger mSceneChanger;
+    //MainSceneChanger mSceneChanger;
 
     void Awake()
     {
@@ -69,7 +78,7 @@ public class FireWorksCreater : MonoBehaviour
     }
     void Start()
     {
-        mSceneChanger = new MainSceneChanger();
+        //mSceneChanger = new MainSceneChanger();
         //各値の初期化
         readFireworksNumber = 0;
         time = 0;
@@ -85,11 +94,11 @@ public class FireWorksCreater : MonoBehaviour
         {
             //時間の更新
             time += Time.deltaTime;
-
+			timeBar.value = 1-time/timeLimit;
             //CsvDataの配列長さを超えていないかのチェック
             if (readCSV.CsvData.Length > readFireworksNumber)
             {
-                if (/*ReceivedZKOO.GetHand().isTouching == false*/Input.GetMouseButtonUp(0) == false)
+                if (/*ReceivedZKOO.GetHand().isTouching == false*/Input.GetMouseButton(0) == false)
                 {
                     if (LockOnNumber >= 5) StartCoroutine(PlayAudio());
                     LockOnNumber = 0;
@@ -136,9 +145,11 @@ public class FireWorksCreater : MonoBehaviour
             GameObject[] fireWorksSeeds;
             fireWorksSeeds = GameObject.FindGameObjectsWithTag("FireWorksSeed");
 
-            if (fireWorksSeeds.Length == 0)
-                StartCoroutine(SceneChanger());
-        }
+			if (fireWorksSeeds.Length == 0 && endFireworks == null){
+				endFireworks = Instantiate(endFireworksSeed,new Vector3(16.5f,2.5f,0f),Quaternion.Euler(-30,0,0)) as GameObject;
+				//StartCoroutine(SceneChanger());
+			}
+		}
     }
 
     IEnumerator PlayAudio()
@@ -149,8 +160,8 @@ public class FireWorksCreater : MonoBehaviour
 
     IEnumerator SceneChanger()
     {
-        yield return new WaitForSeconds(10f);
-        mSceneChanger.SceneChange("Result");
+        yield return new WaitForSeconds(3f);
+        //mSceneChanger.SceneChange("Result");
     }
 
     void RayCast()

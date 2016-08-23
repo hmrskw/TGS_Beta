@@ -20,6 +20,9 @@ public class ResultManager : MonoBehaviour {
 
     [SerializeField]
     GameObject[] evalutionImpact;
+	[SerializeField]
+	GameObject impact;
+
 
     [SerializeField]
     GameObject scoreText;
@@ -49,8 +52,8 @@ public class ResultManager : MonoBehaviour {
     [SerializeField]
     private EasingData[] easingData;
 
-    [SerializeField]
-    Vector3 impactPosition;
+    //[SerializeField]
+    //Vector3 impactPosition;
 
     float scoreRate;
 
@@ -156,8 +159,11 @@ public class ResultManager : MonoBehaviour {
         scoreText.SetActive(true);
         for (int i = evalutionImpact.Length-1; i >= 0; i--)
         {
+			Debug.Log((ScoreManager.TotalFireWorksNum*2)/3*i);
             if (ScoreManager.Score* ((float)ScoreManager.ExplosionNum / (float)ScoreManager.TotalFireWorksNum) >= (float)(ScoreManager.TotalFireWorksNum*2)/3*i) {
-                Instantiate(evalutionImpact[i], impactPosition, Quaternion.Euler(-30, 0, 0));
+				Debug.Log(ScoreManager.Score+"*"+ ((float)ScoreManager.ExplosionNum / (float)ScoreManager.TotalFireWorksNum) +"="+ScoreManager.Score* ((float)ScoreManager.ExplosionNum / (float)ScoreManager.TotalFireWorksNum));
+				Instantiate(impact);
+				Instantiate(evalutionImpact[i]);//, impactPosition, Quaternion.Euler(0, 180, 0));
                 break;
             }
         }

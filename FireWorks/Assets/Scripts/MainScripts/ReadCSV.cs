@@ -185,10 +185,6 @@ public class ReadCSV
         {
             return EnumDefinition.FireｗorksType.SINIRI_KIKU;
         }
-        else if (fireWorksName_ == "万華鏡")
-        {
-            return EnumDefinition.FireｗorksType.MANGEKYOU;
-        }
         else if(fireWorksName_ == "スターマイン")
         {
             return EnumDefinition.FireｗorksType.STAR_MAIN;
@@ -202,7 +198,10 @@ public class ReadCSV
                 {
                     return EnumDefinition.FireｗorksType.NAIAGARA;
                 }
-
+                else if (fireWorksName_ == "万華鏡")
+                {
+                    return EnumDefinition.FireｗorksType.MANGEKYOU;
+                }
                 else if (fireWorksName_ == "芯入り銀冠菊")
                 {
                     return EnumDefinition.FireｗorksType.SINIRI_GINKAMURO_GIKU;
