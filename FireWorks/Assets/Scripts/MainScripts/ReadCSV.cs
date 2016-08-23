@@ -57,7 +57,10 @@ public class ReadCSV
         //TIPS:なにかしらの形でパスを自由に変えられるようにしておく
         //追記:三澤
         //exeにビルドしたときのApplication.dataPathの参照先は「○○_DATA」フォルダ直下
-        string path = Application.dataPath + "/CSVFiles/data1.csv";
+        //string path = Application.dataPath + "/CSVFiles/data1.csv";
+        string path = Application.dataPath + "/CSVFiles/data2.csv";
+
+
 
         //CSVデータを読み込んで、行に分割
         string[] lines = ReadCsvData(path);
@@ -186,7 +189,14 @@ public class ReadCSV
         {
             return EnumDefinition.FireｗorksType.MANGEKYOU;
         }
-
+        else if(fireWorksName_ == "スターマイン")
+        {
+            return EnumDefinition.FireｗorksType.STAR_MAIN;
+        }
+        else if(fireWorksName_ == "小割")
+        {
+            return EnumDefinition.FireｗorksType.KOWARI;
+        }
 
         /*        if (fireWorksName_ == "ナイアガラ")
                 {

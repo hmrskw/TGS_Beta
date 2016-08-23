@@ -4,7 +4,6 @@ using System.Collections.Generic;
 
 public class FireWorksCreater : MonoBehaviour
 {
-
     enum DIRECTION
     {
         LEFT = 1, RIGHT = -1

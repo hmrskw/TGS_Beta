@@ -11,7 +11,8 @@ public class EnumDefinition : MonoBehaviour
         KIKU,                  //菊
         SINIRI_KIKU,           //芯入り菊
         MANGEKYOU,             //万華鏡
-
+        STAR_MAIN,             //スターマイン
+        KOWARI,                //小割
         /*        
                 NAIAGARA,          //ナイアガラ
                 SINIRI_GINKAMURO_GIKU, //芯入り銀冠菊
