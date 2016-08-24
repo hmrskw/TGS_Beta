@@ -60,7 +60,8 @@ public class FireWorksCreater : MonoBehaviour
 
     int LockOnNumber;
 
-	GameObject endFireworks;
+	bool isEnd;
+	//GameObject endFireworks;
 
     //現在何番目（CSVの何行目）の花火を飛ばしているか
     int readFireworksNumber;
@@ -90,11 +91,12 @@ public class FireWorksCreater : MonoBehaviour
         //ポインターが当たった時の処理
         RayCast();
 
-        if (timeLimit > time)
+		timeBar.value = 1-time/timeLimit;
+
+		if (timeLimit >= time)
         {
             //時間の更新
             time += Time.deltaTime;
-			timeBar.value = 1-time/timeLimit;
             //CsvDataの配列長さを超えていないかのチェック
             if (readCSV.CsvData.Length > readFireworksNumber)
             {
@@ -145,9 +147,9 @@ public class FireWorksCreater : MonoBehaviour
             GameObject[] fireWorksSeeds;
             fireWorksSeeds = GameObject.FindGameObjectsWithTag("FireWorksSeed");
 
-			if (fireWorksSeeds.Length == 0 && endFireworks == null){
-				endFireworks = Instantiate(endFireworksSeed,new Vector3(16.5f,2.5f,0f),Quaternion.Euler(-30,0,0)) as GameObject;
-				//StartCoroutine(SceneChanger());
+			if (fireWorksSeeds.Length == 0 && isEnd == false){
+				isEnd = true;
+				StartCoroutine(SceneChanger());
 			}
 		}
     }
@@ -160,8 +162,8 @@ public class FireWorksCreater : MonoBehaviour
 
     IEnumerator SceneChanger()
     {
-        yield return new WaitForSeconds(3f);
-        //mSceneChanger.SceneChange("Result");
+    	yield return new WaitForSeconds(3f);
+		Instantiate(endFireworksSeed,new Vector3(16.5f,2.5f,0f),Quaternion.Euler(-30,0,0));
     }
 
     void RayCast()
