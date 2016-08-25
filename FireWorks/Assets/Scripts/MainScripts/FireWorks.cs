@@ -75,7 +75,7 @@ public class FireWorks : MonoBehaviour
         transform.Translate(deflection* moveSpeed, speed, 0);
 
         lockOnMarker.transform.Translate(-deflection * moveSpeed, 0, 0);
-        lockOnMarker.SetActive(isExploded);
+        lockOnMarker.SetActive(isExploded && Input.GetMouseButton(0));
 
         if (isExploded && /*ReceivedZKOO.GetHand().isTouching*/Input.GetMouseButton(0) == false)
         {

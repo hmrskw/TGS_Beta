@@ -162,8 +162,8 @@ public class FireWorksCreater : MonoBehaviour
 
     IEnumerator SceneChanger()
     {
-    	yield return new WaitForSeconds(3f);
-		Instantiate(endFireworksSeed,new Vector3(16.5f,2.5f,0f),Quaternion.Euler(-30,0,0));
+    	yield return new WaitForSeconds(2f);
+		Instantiate(endFireworksSeed,new Vector3(16.9f,4.25f,2f),Quaternion.Euler(-30,0,0));
     }
 
     void RayCast()

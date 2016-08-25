@@ -114,8 +114,6 @@ public class ButtonReaction : MonoBehaviour
         }
         else
         {
-            //Debug.Log(pageTurnOverButtonIconMaterial);
-
             //光が当たっていないときは真っ黒にする
             pageTurnOverButtonIconMaterial.color = new Color(0f,0f,0f);
         }
@@ -195,18 +193,12 @@ public class ButtonReaction : MonoBehaviour
         {
             if (RayCast("FireWorksSeed") && !Input.GetMouseButton(0))
             {
-                Debug.Log("Third");
-               
-
                 pageTurnOverButton[0].SetActive(true);
             }
         }
         //させていたら複数爆発させたかのチェックへ
         else if (pageCount == 1)
         {
-           
-            Debug.Log(lockOnNumber);
-
             if (lockOnNumber > 1)
             {
                 //ボタンを１つ目から２つ目に変える
