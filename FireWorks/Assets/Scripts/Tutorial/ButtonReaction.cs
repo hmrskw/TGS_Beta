@@ -3,10 +3,15 @@ using System.Collections;
 
 using UnityEngine.SceneManagement;
 
+using UnityEngine.Assertions;
+
 public class ButtonReaction : MonoBehaviour
 {
     [SerializeField]
     TutorialSceneChanger tutorialSceneChanger;
+
+    [SerializeField]
+    TutorialFireWorksCreater tutorialFireworksCreater;
 
     [SerializeField, Tooltip("画面左下に描画する看板")]
     private GameObject signborad;
@@ -22,6 +27,9 @@ public class ButtonReaction : MonoBehaviour
 
     [SerializeField, Tooltip("目的地にたどり着くまでの時間"), Range(1, 5)]
     private int moveTime;
+
+    [SerializeField]
+    Material textColorChanger;
 
     //Easingのスタートポジション。0が看板、1がボタン用
     private Vector3[] startPosition = new Vector3[2];
@@ -41,26 +49,35 @@ public class ButtonReaction : MonoBehaviour
     //「次へ」アイコンのマテリアル変更用
     private Material pageTurnOverButtonIconMaterial;
 
+    //「次へ」ボタンを押されたときに、花火のポイントをリセットする
+    bool isPointReset = false;
+    //lockOnNumberを貰うために使う
+    int lockOnNumber = 0;
+
     void Start()
-    {   
+    {
+        lockOnNumber = tutorialFireworksCreater.LockOnNumber;
+
         //Easingを始めるポジションの初期化
         startPosition[0] = signborad.transform.position;
         startPosition[1] = pageTurnOverButton[0].transform.position;
 
-        //「次へ」アイコンのマテリアルを取得
-        pageTurnOverButtonIconMaterial = pageTurnOverButton[0].GetComponent<Renderer>().material;
+        //「次へ」アイコンのマテリアルを取得       
+        pageTurnOverButtonIconMaterial = textColorChanger;
+
+        pageTurnOverButton[0].SetActive(false);
     }
 
     void Update()
     {
-        if (/*ReceivedZKOO.GrippedHand()*/RayCast())
+        lockOnNumber = tutorialFireworksCreater.LockOnNumber;
+
+        if (RayCast("UI"))
         {
             //レイが当たったら次へアイコンの色を変更
             //TIPS：色は現在適当なのでのちのち変更する
             pageTurnOverButtonIconMaterial.color = new Color(255f, 0f, 0f);
 
-
-            //TIPS:現在はスペースキーで反応するためEasingが連打可能になっている
             if (Input.GetMouseButtonDown(0))
             {
                 if (pageCount == 0)
@@ -68,10 +85,11 @@ public class ButtonReaction : MonoBehaviour
 
                     //ページを次のページに変更
                     pageCount++;
+
+                    pageTurnOverButton[0].SetActive(false);
+
                     //看板の回転を許可
                     //canRotation = true;
-                    //ボタンを１つ目から２つ目に変える
-                    ChangeButtonUi();
                 }
                 /*else if (pageCount == 1)
                 {
@@ -79,7 +97,7 @@ public class ButtonReaction : MonoBehaviour
                     pageCount++;
                     //看板の回転を許可
                     //canRotation = true;
-                    //ボタンを１つ目から２つ目に変える
+                    //ボタンを2つ目から3つ目に変える
                     ChangeButtonUi();
                 }*/
                 else
@@ -96,11 +114,15 @@ public class ButtonReaction : MonoBehaviour
         }
         else
         {
-            //光が当たっていないときは真っ白にする
-            pageTurnOverButtonIconMaterial.color = new Color(255f, 255f, 255f);
+            //Debug.Log(pageTurnOverButtonIconMaterial);
+
+            //光が当たっていないときは真っ黒にする
+            pageTurnOverButtonIconMaterial.color = new Color(0f,0f,0f);
         }
 
         signborad.transform.rotation = Quaternion.Slerp(signborad.transform.rotation, Quaternion.Euler(0, 0, 120 * pageCount), 0.07f);
+
+        CheckFireworksHowExplosion();
 
 /*        if (canRotation)
         {
@@ -115,6 +137,7 @@ public class ButtonReaction : MonoBehaviour
             StartEasing(startTime, moveTime);
         }
     }
+   
 
     /*private void RotationSignboard()
     {
@@ -165,7 +188,34 @@ public class ButtonReaction : MonoBehaviour
         if(rate >= 1)tutorialSceneChanger.SceneChange("Main");
     }
 
-    bool RayCast()
+    void CheckFireworksHowExplosion()
+    {
+        //単発で爆発させているか
+        if (pageCount == 0)
+        {
+            if (RayCast("FireWorksSeed") && !Input.GetMouseButton(0))
+            {
+                Debug.Log("Third");
+               
+
+                pageTurnOverButton[0].SetActive(true);
+            }
+        }
+        //させていたら複数爆発させたかのチェックへ
+        else if (pageCount == 1)
+        {
+           
+            Debug.Log(lockOnNumber);
+
+            if (lockOnNumber > 1)
+            {
+                //ボタンを１つ目から２つ目に変える
+                ChangeButtonUi();
+            }
+        }
+    }
+
+    bool RayCast(string tagName_)
     {
         //カメラの場所からポインタの場所に向かってレイを飛ばす
         Ray ray = Camera.main.ScreenPointToRay(/*new Vector2(ReceivedZKOO.GetHand().position.x, ReceivedZKOO.GetHand().position.y + Screen.height)*/Input.mousePosition);
@@ -177,12 +227,11 @@ public class ButtonReaction : MonoBehaviour
             //当たったオブジェクトを格納
             GameObject obj = hit.collider.gameObject;
 
-            if (obj.CompareTag("UI"))
+            if (obj.CompareTag(tagName_))
             {
                 return true;
             }
         }
-
         return false;
     }
 }
