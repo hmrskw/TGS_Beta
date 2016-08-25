@@ -30,7 +30,7 @@ public class FireWorks : MonoBehaviour
 
     [SerializeField]
     GameObject lockOnMarker;
-
+    
     GameObject fireWorksImpact;
     public GameObject FireWorksImpact
     {
@@ -73,8 +73,8 @@ public class FireWorks : MonoBehaviour
     {
         if(isDeflection)deflection = Mathf.Sin(Time.frameCount*1.2f);
         transform.Translate(deflection* moveSpeed, speed, 0);
-        lockOnMarker.transform.Translate(-deflection * moveSpeed, 0, 0);
 
+        lockOnMarker.transform.Translate(-deflection * moveSpeed, 0, 0);
         lockOnMarker.SetActive(isExploded);
 
         if (isExploded && /*ReceivedZKOO.GetHand().isTouching*/Input.GetMouseButton(0) == false)
