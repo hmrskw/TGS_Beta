@@ -12,6 +12,9 @@ public class ButtonScalingChanger : MonoBehaviour
     [SerializeField, Tooltip("最大値になるまでの時間"), Range(0.1f, 5.0f)]
     private float moveTime;
 
+    [SerializeField]
+    Material textColorChanger;
+
     //Easingのスタートポジション
     private Vector3 startSize;
     //Easingのエンドポジション
@@ -40,7 +43,9 @@ public class ButtonScalingChanger : MonoBehaviour
         //起動する時間の設定
         startTime = Time.timeSinceLevelLoad;
 
-        startIconMaterial = GetComponent<Renderer>().material;
+        textColorChanger.color = new Color(0f, 0f, 0f);
+
+        startIconMaterial = textColorChanger;
     }
 
     void Update()
@@ -49,7 +54,7 @@ public class ButtonScalingChanger : MonoBehaviour
         //当たっていない場合は常にEasingを行う
         if (!RayCast() && !isChangeScene)
         {
-            startIconMaterial.color = new Color(255f, 255f, 255f);
+            startIconMaterial.color = new Color(0f, 0f, 0f);
 
             if (!canEasing)
             {

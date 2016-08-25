@@ -3,7 +3,6 @@ using System.Collections;
 
 public class TutorialFireWorksCreater : MonoBehaviour
 {
-
     [SerializeField, Tooltip("玉が発射される位置")]
     Vector3[] fireWorksInitPosition;
 
@@ -24,13 +23,26 @@ public class TutorialFireWorksCreater : MonoBehaviour
 
     FireWorks fireWorks;
 
-    int LockOnNumber;
+    //int lockOnNumber;
+    private int lockOnNumber;
 
-    void Start()
+    public int LockOnNumber
+    {
+        get { return lockOnNumber; }
+    }
+
+    private bool isExplode;
+
+    public bool  IsExplode
+    {
+        get { return isExplode; }
+    }
+
+    void Awake()
     {
         //各値の初期化
         time = 0;
-        LockOnNumber = 0;
+        lockOnNumber = 0;
     }
 
     // Update is called once per frame
@@ -42,14 +54,13 @@ public class TutorialFireWorksCreater : MonoBehaviour
         //時間の更新
         time += Time.deltaTime;
 
-        if (/*!ReceivedZKOO.GetHand().isTouching*/!Input.GetMouseButton(0)) LockOnNumber = 0;
+        if (/*!ReceivedZKOO.GetHand().isTouching*/!Input.GetMouseButton(0)) lockOnNumber = 0;
 
         if (time > frequency)
         {
             for (int i = 0; i < fireWorksInitPosition.Length; i++)
             {
                 //玉の生成
-
                 GameObject seedObj = Instantiate(
                     fireWorksSeed,//玉のプレハブ
                     fireWorksInitPosition[i],//発射位置
@@ -83,12 +94,12 @@ public class TutorialFireWorksCreater : MonoBehaviour
             fireWorks = obj.GetComponent<FireWorks>();
             if (fireWorks != null && fireWorks.IsExploded == false)
             {
-                fireWorks.ExploadOrderNumber = LockOnNumber++;
+                fireWorks.ExploadOrderNumber = lockOnNumber++;
                 fireWorks.IsExploded = true;
                 Instantiate(hitEffect, obj.transform.position, Quaternion.Euler(0, 0, 0));
             }
         }
-    }
+    } 
 }
 /*
 RayCast(当たった時に実行したい関数(), string "判定したいオブジェクトの名前")
