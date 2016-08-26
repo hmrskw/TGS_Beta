@@ -16,7 +16,7 @@ public class ReadCSV
         public int shotPosition;   //撃つ場所   
         public int fireworksColor; //花火の色
         public EnumDefinition.ShotAngle shotAngle;      //撃つ角度
-      //public bool isApplyGravity; //重力をかけるかどうか
+                                                        //public bool isApplyGravity; //重力をかけるかどうか
         public float fireworksSize;//花火のサイズ
     }
 
@@ -44,6 +44,13 @@ public class ReadCSV
         get { return csvData; }
     }
 
+    //パスの名前
+    private string[] pathName =
+    {
+        "data1.csv", //構成１
+        "data2.csv"  //構成２
+    };
+    
     /*修正：三澤
     FireWorksCreaterのStart関数が先に動くとまずいので
     Start関数ではなくFireWorksCreaterのStart関数の一番最初で呼び出せるように変更
@@ -51,14 +58,21 @@ public class ReadCSV
     public void ReadFile()
     {
         //FireTypeなどのEnumを定義しているクラスの変数
-        //        var EnumDefiniton = this.GetComponent<EnumDefinition>();
+        //var EnumDefiniton = this.GetComponent<EnumDefinition>();
 
         //CSVデータの格納位置のパス
         //TIPS:なにかしらの形でパスを自由に変えられるようにしておく
         //追記:三澤
         //exeにビルドしたときのApplication.dataPathの参照先は「○○_DATA」フォルダ直下
         //string path = Application.dataPath + "/CSVFiles/data1.csv";
-        string path = Application.dataPath + "/CSVFiles/data2.csv";
+        //string path = Application.dataPath + "/CSVFiles/data2.csv";
+
+        int suffixNumber = UnityEngine.Random.Range(0, 2);
+
+        Debug.Log(suffixNumber);
+        Debug.Log(pathName[suffixNumber]);
+
+        string path = Application.dataPath + "/CSVFiles/" + pathName[suffixNumber];
 
 
 
@@ -73,7 +87,7 @@ public class ReadCSV
 
         //CSVデータを区切る文字
         char[] commaSpliter = { ',' };
-//        char[] dotSpliter = { '.' };
+        //        char[] dotSpliter = { '.' };
 
         for (int i = 0; i < lines.Length; i++)
         {
@@ -185,11 +199,11 @@ public class ReadCSV
         {
             return EnumDefinition.FireｗorksType.SINIRI_KIKU;
         }
-        else if(fireWorksName_ == "スターマイン")
+        else if (fireWorksName_ == "スターマイン")
         {
             return EnumDefinition.FireｗorksType.STAR_MAIN;
         }
-        else if(fireWorksName_ == "小割")
+        else if (fireWorksName_ == "小割")
         {
             return EnumDefinition.FireｗorksType.KOWARI;
         }
