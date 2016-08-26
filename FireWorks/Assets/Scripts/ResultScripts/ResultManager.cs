@@ -20,9 +20,9 @@ public class ResultManager : MonoBehaviour {
 
     [SerializeField]
     GameObject[] evalutionImpact;
-	[SerializeField]
-	GameObject impact;
 
+    [SerializeField]
+	GameObject impact;
 
     [SerializeField]
     GameObject scoreText;
@@ -61,10 +61,13 @@ public class ResultManager : MonoBehaviour {
     Easing stageEasing;
     Easing bordEasing;
 
+    ResultSceneChanger resultSceneChanger;
 
     float[] delay;
 
     void Start () {
+        resultSceneChanger = new ResultSceneChanger();
+
         scoreRate = (float)ScoreManager.ExplosionNum / (float)ScoreManager.TotalFireWorksNum;
 
         gallerysEasing = new Easing[gallerys.Length];
@@ -151,7 +154,6 @@ public class ResultManager : MonoBehaviour {
             bord.transform.position = Vector3.Lerp(bordEasing.startPosition, bordEasing.endPosition, pos);
             yield return null;
         }
-        yield return null;
     }
 
     IEnumerator ImpactResultFireworks()
@@ -167,6 +169,13 @@ public class ResultManager : MonoBehaviour {
                 break;
             }
         }
-        yield return null;
+        while (true)
+        {
+            if (Input.GetMouseButtonDown(0))
+            {
+                resultSceneChanger.SceneChange("Title");
+            }
+            yield return null;
+        }
     }
 }

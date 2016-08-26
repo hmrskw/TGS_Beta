@@ -118,7 +118,7 @@ public class ButtonReaction : MonoBehaviour
             pageTurnOverButtonIconMaterial.color = new Color(0f,0f,0f);
         }
 
-        signborad.transform.rotation = Quaternion.Slerp(signborad.transform.rotation, Quaternion.Euler(0, 0, 120 * pageCount), 0.07f);
+        signborad.transform.rotation = Quaternion.Slerp(signborad.transform.rotation, Quaternion.Euler(-30, 0, 120 * pageCount), 0.07f);
 
         CheckFireworksHowExplosion();
 
