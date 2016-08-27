@@ -6,7 +6,8 @@ public class TrackingChecker : MonoBehaviour {
     [SerializeField]
     Image[] checker = new Image[2];
 
-	void Start () {
+	void Awake () {
+		Application.targetFrameRate = 30;
     }
 
     void Update () {

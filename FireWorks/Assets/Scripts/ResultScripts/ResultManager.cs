@@ -161,9 +161,8 @@ public class ResultManager : MonoBehaviour {
         scoreText.SetActive(true);
         for (int i = evalutionImpact.Length-1; i >= 0; i--)
         {
-			//Debug.Log((ScoreManager.TotalFireWorksNum*2)/3*i);
-            if (ScoreManager.Score* ((float)ScoreManager.ExplosionNum / (float)ScoreManager.TotalFireWorksNum) >= (float)(ScoreManager.TotalFireWorksNum*2)/3*i) {
-				//Debug.Log(ScoreManager.Score+"*"+ ((float)ScoreManager.ExplosionNum / (float)ScoreManager.TotalFireWorksNum) +"="+ScoreManager.Score* ((float)ScoreManager.ExplosionNum / (float)ScoreManager.TotalFireWorksNum));
+            if (ScoreManager.Score* ((float)ScoreManager.ExplosionNum / (float)ScoreManager.TotalFireWorksNum) >= 
+				(float)(ScoreManager.TotalFireWorksNum*2)/3*i*i) {
 				Instantiate(impact);
 				Instantiate(evalutionImpact[i]);//, impactPosition, Quaternion.Euler(0, 180, 0));
                 break;

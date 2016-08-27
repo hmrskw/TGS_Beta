@@ -207,6 +207,10 @@ public class ReadCSV
         {
             return EnumDefinition.FireｗorksType.KOWARI;
         }
+		else if (fireWorksName_ == "形花火")
+		{
+			return EnumDefinition.FireｗorksType.SHAPE;
+		}
 
         /*        if (fireWorksName_ == "ナイアガラ")
                 {
