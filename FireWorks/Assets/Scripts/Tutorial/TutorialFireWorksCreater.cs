@@ -3,6 +3,9 @@ using System.Collections;
 
 public class TutorialFireWorksCreater : MonoBehaviour
 {
+	[SerializeField]
+	ButtonReaction reaction;
+
     [SerializeField, Tooltip("玉が発射される位置")]
     Vector3[] fireWorksInitPosition;
 
@@ -54,9 +57,9 @@ public class TutorialFireWorksCreater : MonoBehaviour
         //時間の更新
         time += Time.deltaTime;
 
-        if (/*!ReceivedZKOO.GetHand().isTouching*/!Input.GetMouseButton(0)) lockOnNumber = 0;
+        if (!Input.GetMouseButton(0)) lockOnNumber = 0;
 
-        if (time > frequency)
+		if (time > frequency && reaction.CanEasin == false)
         {
             for (int i = 0; i < fireWorksInitPosition.Length; i++)
             {

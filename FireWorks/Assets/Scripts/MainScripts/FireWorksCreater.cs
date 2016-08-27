@@ -13,7 +13,10 @@ public class FireWorksCreater : MonoBehaviour
     int timeLimit;
 
     [SerializeField]
-    Slider timeBar;
+    Slider timeBarSlider;
+
+	[SerializeField]
+	GameObject timeBarFire;
 
 	[SerializeField, Tooltip("制限時間が来たら飛ぶ花火")]
 	GameObject endFireworksSeed;
@@ -91,7 +94,7 @@ public class FireWorksCreater : MonoBehaviour
         //ポインターが当たった時の処理
         RayCast();
 
-		timeBar.value = 1-time/timeLimit;
+		timeBarSlider.value = 1-time/timeLimit;
 
 		if (timeLimit >= time)
         {
@@ -149,6 +152,7 @@ public class FireWorksCreater : MonoBehaviour
 
 			if (fireWorksSeeds.Length == 0 && isEnd == false){
 				isEnd = true;
+				timeBarFire.SetActive(false);
 				StartCoroutine(SceneChanger());
 			}
 		}

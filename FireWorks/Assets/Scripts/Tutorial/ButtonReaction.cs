@@ -42,6 +42,9 @@ public class ButtonReaction : MonoBehaviour
     
     //Easingを始めていいかどうか
     private bool canEasing = false;
+	public bool CanEasin{
+		get{return canEasing;}
+	}
 
     //Easingをするために必要な起動時間
     private float startTime;
@@ -91,15 +94,16 @@ public class ButtonReaction : MonoBehaviour
                     //看板の回転を許可
                     //canRotation = true;
                 }
-                /*else if (pageCount == 1)
+                else if (pageCount == 1)
                 {
                     //ページを次のページに変更
                     pageCount++;
                     //看板の回転を許可
                     //canRotation = true;
                     //ボタンを2つ目から3つ目に変える
-                    ChangeButtonUi();
-                }*/
+                    //ChangeButtonUi();
+					pageTurnOverButton[0].SetActive(false);
+                }
                 else
                 {
                     if (!canEasing)
@@ -196,14 +200,20 @@ public class ButtonReaction : MonoBehaviour
                 pageTurnOverButton[0].SetActive(true);
             }
         }
+		if (pageCount == 1)
+		{
+			if (lockOnNumber > 1)
+			{
+				pageTurnOverButton[0].SetActive(true);
+			}
+		}
         //させていたら複数爆発させたかのチェックへ
-        else if (pageCount == 1)
+        else if (pageCount == 2)
         {
-            if (lockOnNumber > 1)
-            {
-                //ボタンを１つ目から２つ目に変える
-                ChangeButtonUi();
-            }
+			if (RayCast("FireWorksSeed") && !Input.GetMouseButton(0))
+			{
+				ChangeButtonUi();
+			}
         }
     }
 
