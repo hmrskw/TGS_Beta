@@ -105,7 +105,7 @@ public class FireWorksCreater : MonoBehaviour
             {
                 if (/*ReceivedZKOO.GetHand().isTouching == false*/Input.GetMouseButton(0) == false)
                 {
-                    if (LockOnNumber >= 5) StartCoroutine(PlayAudio());
+					if (LockOnNumber >= 5&& gallerys.isPlaying == false) StartCoroutine(PlayAudio());
                     LockOnNumber = 0;
                 }
 

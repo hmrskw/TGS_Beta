@@ -53,7 +53,7 @@ public class ButtonReaction : MonoBehaviour
     private Material pageTurnOverButtonIconMaterial;
 
     //「次へ」ボタンを押されたときに、花火のポイントをリセットする
-    bool isPointReset = false;
+    //bool isPointReset = false;
     //lockOnNumberを貰うために使う
     int lockOnNumber = 0;
 

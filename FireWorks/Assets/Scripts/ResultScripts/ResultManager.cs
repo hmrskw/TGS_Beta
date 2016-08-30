@@ -52,6 +52,9 @@ public class ResultManager : MonoBehaviour {
     [SerializeField]
     private EasingData[] easingData;
 
+	[SerializeField]
+	private AudioSource SE_result;
+
     //[SerializeField]
     //Vector3 impactPosition;
 
@@ -154,6 +157,7 @@ public class ResultManager : MonoBehaviour {
             bord.transform.position = Vector3.Lerp(bordEasing.startPosition, bordEasing.endPosition, pos);
             yield return null;
         }
+		SE_result.Play();
     }
 
     IEnumerator ImpactResultFireworks()
@@ -173,6 +177,7 @@ public class ResultManager : MonoBehaviour {
             if (Input.GetMouseButtonDown(0))
             {
                 resultSceneChanger.SceneChange("Title");
+				break;
             }
             yield return null;
         }

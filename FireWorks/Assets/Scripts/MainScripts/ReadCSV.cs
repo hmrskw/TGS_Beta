@@ -69,9 +69,6 @@ public class ReadCSV
 
         int suffixNumber = UnityEngine.Random.Range(0, 2);
 
-        Debug.Log(suffixNumber);
-        Debug.Log(pathName[suffixNumber]);
-
         string path = Application.dataPath + "/CSVFiles/" + pathName[suffixNumber];
 
 

@@ -22,9 +22,9 @@ public class Gallery : MonoBehaviour {
     float[] startTime;
      
     void Start () {
-        totalFireWorksNum = ScoreManager.TotalFireWorksNum;
-        scoreRate = 0;
-        
+		totalFireWorksNum = ScoreManager.TotalFireWorksNum;
+		scoreRate = 0;
+
         startPosition = new Vector3[gallerys.Length];
         endPosition = new Vector3[gallerys.Length];
         startTime = new float[gallerys.Length];
@@ -39,8 +39,8 @@ public class Gallery : MonoBehaviour {
     }
 
     void Update () {
-        scoreRate = (float)ScoreManager.ExplosionNum / totalFireWorksNum;
-        for (int i = 0; i < gallerys.Length; i++)
+		scoreRate = (float)ScoreManager.ExplosionNum / totalFireWorksNum;
+		for (int i = 0; i < gallerys.Length; i++)
         {
             if (gallerys[i].activeInHierarchy == false)
             {
