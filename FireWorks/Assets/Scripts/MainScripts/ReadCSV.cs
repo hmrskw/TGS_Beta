@@ -120,9 +120,9 @@ public class ReadCSV
                                                     tempFireworksColor[2],tempFireworksColor[3]);
             */
 
-            //CSVデータは「１」か「２」だが、このデータが添え字になるため－１している
+            //CSVデータは「１」か「２」か「３」だが、このデータが添え字になるため－１している
             csvData[i].fireworksColor = Convert.ToInt16(didCommaSeparationData[(int)ElementsName.FIREWORKS_COLOR]) - 1;
-            if (csvData[i].fireworksColor > 1) csvData[i].fireworksColor = 0;
+            if (csvData[i].fireworksColor > 2) csvData[i].fireworksColor = 0;
 
             //文字列を元にEnumに変換して格納
             csvData[i].shotAngle = FireworksAngleChecker(didCommaSeparationData[(int)ElementsName.SHOT_ANGLE]);

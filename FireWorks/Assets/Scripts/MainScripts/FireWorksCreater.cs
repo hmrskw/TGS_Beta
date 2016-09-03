@@ -134,7 +134,7 @@ public class FireWorksCreater : MonoBehaviour
                     {
                         fireWorks.FireWorksImpact = fireWorksImpact
                             [(int)readCSV.CsvData[readFireworksNumber].fireｗorksType]
-                            .Color[readCSV.CsvData[readFireworksNumber].fireworksColor % fireWorksImpact[(int)readCSV.CsvData[readFireworksNumber].fireｗorksType].Color.Length];
+                            .Color[readCSV.CsvData[readFireworksNumber].fireworksColor/* % fireWorksImpact[(int)readCSV.CsvData[readFireworksNumber].fireｗorksType].Color.Length*/];
                         fireWorks.Size = readCSV.CsvData[readFireworksNumber].fireworksSize;
                     }
 
