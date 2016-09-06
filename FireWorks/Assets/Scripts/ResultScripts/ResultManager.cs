@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public class ResultManager : MonoBehaviour {
     struct Easing
@@ -26,6 +27,9 @@ public class ResultManager : MonoBehaviour {
 
     [SerializeField]
     GameObject scoreText;
+
+    [SerializeField]
+    Slider evaluationSlider;
 
     [SerializeField]
     bool isDelay;
@@ -59,6 +63,10 @@ public class ResultManager : MonoBehaviour {
     //Vector3 impactPosition;
 
     float scoreRate;
+    float score;
+    float gageValue;
+
+    float evaluationStandard;
 
     Easing[] gallerysEasing;
     Easing stageEasing;
@@ -72,10 +80,16 @@ public class ResultManager : MonoBehaviour {
         resultSceneChanger = new ResultSceneChanger();
 
         scoreRate = (float)ScoreManager.ExplosionNum / (float)ScoreManager.TotalFireWorksNum;
+        score = ScoreManager.Score * ((float)ScoreManager.ExplosionNum / (float)ScoreManager.TotalFireWorksNum);
+        gageValue = 0f;
+
+        evaluationStandard = (float)(ScoreManager.TotalFireWorksNum * 2f) / 3f;
 
         gallerysEasing = new Easing[gallerys.Length];
+
         delay = new float[gallerys.Length];
 
+        evaluationSlider.value = 0;
         for (int i = 0; i < gallerys.Length; i++)
         {
             gallerysEasing[i].endPosition = gallerys[i].transform.localPosition;
@@ -109,10 +123,11 @@ public class ResultManager : MonoBehaviour {
 
     IEnumerator ResultUpdate()
     {
-            yield return StartCoroutine(MoveGallery());
-            yield return StartCoroutine(PopStage());
-            yield return new WaitForSeconds(0.5f);
-            yield return StartCoroutine(ImpactResultFireworks());
+        yield return StartCoroutine(MoveGallery());
+        yield return StartCoroutine(PopStage());
+        yield return StartCoroutine(Gage());
+        yield return new WaitForSeconds(0.5f);
+        yield return StartCoroutine(ImpactResultFireworks());
     }
 
     IEnumerator MoveGallery()
@@ -160,13 +175,22 @@ public class ResultManager : MonoBehaviour {
 		SE_result.Play();
     }
 
-    IEnumerator ImpactResultFireworks()
+    IEnumerator Gage()
     {
         scoreText.SetActive(true);
+        while (gageValue <= System.Math.Min(score / (evaluationStandard * 2f), 1f)) {
+            evaluationSlider.value = gageValue;
+            gageValue += 0.01f;
+            yield return null;
+        }
+    }
+
+    IEnumerator ImpactResultFireworks()
+    {
         for (int i = evalutionImpact.Length-1; i >= 0; i--)
         {
-            if (ScoreManager.Score* ((float)ScoreManager.ExplosionNum / (float)ScoreManager.TotalFireWorksNum) >= 
-				(float)(ScoreManager.TotalFireWorksNum*2)/3*i*i) {
+            if (score >=
+                evaluationStandard * i) {
 				Instantiate(impact);
 				Instantiate(evalutionImpact[i]);//, impactPosition, Quaternion.Euler(0, 180, 0));
                 break;

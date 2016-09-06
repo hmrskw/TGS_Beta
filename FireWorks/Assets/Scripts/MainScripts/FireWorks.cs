@@ -10,7 +10,7 @@ public class FireWorks : MonoBehaviour
     }
 
     [SerializeField, Tooltip("花火が不発になる高さ")]
-    float deadLine;
+    public float deadLine;
 
     [SerializeField, Tooltip("これより低い場所では花火は爆発しない")]
     float borderLine;
@@ -32,6 +32,7 @@ public class FireWorks : MonoBehaviour
     GameObject lockOnMarker;
     
     GameObject fireWorksImpact;
+
     public GameObject FireWorksImpact
     {
         set { fireWorksImpact = value; }
@@ -60,6 +61,7 @@ public class FireWorks : MonoBehaviour
     public int ExploadOrderNumber
     {
         set { exploadOrderNumber = value; }
+        get { return exploadOrderNumber; }
     }
 
     void Start()

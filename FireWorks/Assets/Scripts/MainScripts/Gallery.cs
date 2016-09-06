@@ -20,7 +20,7 @@ public class Gallery : MonoBehaviour {
     Vector3[] startPosition;
     Vector3[] endPosition;
     float[] startTime;
-     
+
     void Start () {
 		totalFireWorksNum = ScoreManager.TotalFireWorksNum;
 		scoreRate = 0;

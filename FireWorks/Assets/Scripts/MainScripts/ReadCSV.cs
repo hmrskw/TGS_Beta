@@ -11,7 +11,7 @@ public class ReadCSV
 {
     public struct CSVData
     {
-        public int shotTiming;     //撃つ時間
+        public float shotTiming;     //撃つ時間
         public EnumDefinition.FireｗorksType fireｗorksType; //花火の型
         public int shotPosition;   //撃つ場所   
         public int fireworksColor; //花火の色
@@ -48,7 +48,8 @@ public class ReadCSV
     private string[] pathName =
     {
         "data1.csv", //構成１
-        "data2.csv"  //構成２
+        "data2.csv",  //構成２
+        "data3.csv",  //構成３
     };
     
     /*修正：三澤
@@ -67,8 +68,7 @@ public class ReadCSV
         //string path = Application.dataPath + "/CSVFiles/data1.csv";
         //string path = Application.dataPath + "/CSVFiles/data2.csv";
 
-        int suffixNumber = UnityEngine.Random.Range(0, 2);
-
+        int suffixNumber = UnityEngine.Random.Range(0, 3);
         string path = Application.dataPath + "/CSVFiles/" + pathName[suffixNumber];
 
 
@@ -92,7 +92,8 @@ public class ReadCSV
             didCommaSeparationData = DataSeparation(lines[i], commaSpliter, CSVDATA_ELEMENTS);
 
             //データをcsvDataに格納
-            csvData[i].shotTiming = Convert.ToInt16(didCommaSeparationData[(int)ElementsName.SHOT_TIMING]);
+            //花火の発射時間を格納
+            csvData[i].shotTiming = Convert.ToSingle(didCommaSeparationData[(int)ElementsName.SHOT_TIMING]);
 
             //花火の型を文字列で仮格納
             string tempFireWorkstype = Convert.ToString(didCommaSeparationData[(int)ElementsName.FIREWORKS_TYPE]);

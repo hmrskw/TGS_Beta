@@ -3,19 +3,22 @@ using System.Collections;
 
 public class EndFireworksSeed : MonoBehaviour {
 	[SerializeField]
-	GameObject[] endFireworksImpacts;
+	GameObject[] endFireworksImpacts = new GameObject[2];
 
-	[SerializeField]
+    [SerializeField]
+    GameObject aroundFireworksWordImpacts;
+
+    [SerializeField]
 	float speed;
 
 	MainSceneChanger mSceneChanger;
 
-	SpriteRenderer seedSpriteRenderer;
-	//Particle endFireworks;
+	ParticleSystem endFireworksSeed;
+
 
 	void Start () {
 		mSceneChanger = new MainSceneChanger();
-		seedSpriteRenderer = GetComponent<SpriteRenderer>();
+        endFireworksSeed = GetComponent<ParticleSystem>();
 		StartCoroutine(EndMain());
 	}
 	
@@ -25,11 +28,22 @@ public class EndFireworksSeed : MonoBehaviour {
 			transform.Translate(-speed,speed,0);
 			yield return null;
 		}
-		seedSpriteRenderer.enabled=false;
-		for(int i = 0;i<endFireworksImpacts.Length;i++){
-			Instantiate(endFireworksImpacts[i],transform.position,Quaternion.Euler(0,180,0));
-		}
-		yield return StartCoroutine(SceneChanger());
+        for (int i = 0; i < endFireworksImpacts.Length; i++)
+        {
+                Instantiate(endFireworksImpacts[i], transform.position, Quaternion.Euler(0, 180, 0));
+        }
+        for (int i = 1; i <= 2; i++)
+        {
+            for (int j = 0; j < 2; j++)
+            {
+                Vector2 sign = new Vector2(1 - (j * 2), 3 - (i * 2));
+                Debug.Log(sign);
+                Instantiate(aroundFireworksWordImpacts, transform.position - new Vector3(10 * i * sign.x, 5 * i * sign.y, 0), Quaternion.Euler(0, 180, 0));
+            }
+        }
+
+        endFireworksSeed.Stop();
+        yield return StartCoroutine(SceneChanger());
 	}
 
 	IEnumerator SceneChanger()

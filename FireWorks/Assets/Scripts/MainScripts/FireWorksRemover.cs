@@ -4,11 +4,14 @@ using System.Collections;
 public class FireWorksRemover : MonoBehaviour {
     [SerializeField]
     AudioClip[] impactSE = new AudioClip[3];
-
+    
     ParticleSystem impact;
     AudioSource audioSource;
 
+    bool playedAudio;
+
     void Start () {
+        playedAudio = false;
         impact = GetComponent<ParticleSystem>();
         audioSource = GetComponent<AudioSource>();
         for (int i = 0; i < impactSE.Length; i++) {
@@ -18,19 +21,31 @@ public class FireWorksRemover : MonoBehaviour {
                 break;
             }
         }
+
         StartCoroutine(playAudio());
 	}
 	
 	void Update () {
-        if (impact.isPlaying == false && audioSource.isPlaying == false)
+        //if (impact != null)
+        //{
+            if (impact.isPlaying == false && audioSource.isPlaying == false)
+            {
+                Destroy(this.gameObject);
+            }
+        /*}
+        else
         {
-            Destroy(this.gameObject);
-        }
+            if (audioSource.isPlaying == false && playedAudio == true)
+            {
+                Destroy(this.gameObject);
+            }
+        }*/
 	}
 
     IEnumerator playAudio()
     {
         yield return new WaitForSeconds(0.5f);
         audioSource.Play();
+        playedAudio = true;
     }
 }

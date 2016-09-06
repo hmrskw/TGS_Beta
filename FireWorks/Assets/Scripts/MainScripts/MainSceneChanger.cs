@@ -11,6 +11,15 @@ public class MainSceneChanger : MonoBehaviour , ISceneBase
         RIGHT_BUTTON
     }
 
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Return))
+        {
+            SceneChange("Result");
+        }
+
+    }
+
     public void SceneChange(string nextSceneName)
     {
         SceneManager.LoadScene("Result");

@@ -16,6 +16,9 @@ public class ButtonReaction : MonoBehaviour
     [SerializeField, Tooltip("画面左下に描画する看板")]
     private GameObject signborad;
 
+    [SerializeField, Tooltip("画面左上に描画する看板")]
+    private GameObject sceneTitle;
+
     [SerializeField, Tooltip("画面右下に描画するボタン。0番が一枚目、１番が二枚目")]
     private GameObject[] pageTurnOverButton = new GameObject[2];
 
@@ -23,7 +26,7 @@ public class ButtonReaction : MonoBehaviour
     private AnimationCurve curve;
 
     [SerializeField, Tooltip("Easingの目的地。０番が看板用、1番がボタン用")]
-    private Vector3[] endPositon = new Vector3[2];
+    private Vector3[] endPositon = new Vector3[3];
 
     [SerializeField, Tooltip("目的地にたどり着くまでの時間"), Range(1, 5)]
     private int moveTime;
@@ -32,7 +35,7 @@ public class ButtonReaction : MonoBehaviour
     Material textColorChanger;
 
     //Easingのスタートポジション。0が看板、1がボタン用
-    private Vector3[] startPosition = new Vector3[2];
+    private Vector3[] startPosition = new Vector3[3];
 
     //説明が何ページ目かのカウント
     private int pageCount = 0;
@@ -64,6 +67,7 @@ public class ButtonReaction : MonoBehaviour
         //Easingを始めるポジションの初期化
         startPosition[0] = signborad.transform.position;
         startPosition[1] = pageTurnOverButton[0].transform.position;
+        startPosition[2] = sceneTitle.transform.position;
 
         //「次へ」アイコンのマテリアルを取得       
         pageTurnOverButtonIconMaterial = textColorChanger;
@@ -178,6 +182,7 @@ public class ButtonReaction : MonoBehaviour
         {
             signborad.transform.position = endPositon[0];
             pageTurnOverButton[1].transform.position = endPositon[1];
+            sceneTitle.transform.position = endPositon[2];
             canEasing = false;
         }
 
@@ -186,8 +191,9 @@ public class ButtonReaction : MonoBehaviour
 
         signborad.transform.position = Vector3.Lerp(startPosition[0], endPositon[0], pos);
         pageTurnOverButton[1].transform.position = Vector3.Lerp(startPosition[1], endPositon[1], pos);
+        sceneTitle.transform.position = Vector3.Lerp(startPosition[2], endPositon[2], pos);
 
-        if(rate >= 1)tutorialSceneChanger.SceneChange("Main");
+        if (rate >= 1)tutorialSceneChanger.SceneChange("Main");
     }
 
     void CheckFireworksHowExplosion()

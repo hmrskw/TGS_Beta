@@ -52,23 +52,33 @@ public class FireWorksCreater : MonoBehaviour
     [SerializeField]
     AudioSource gallerys;
 
+    [SerializeField]
+    GameObject lockonRank;
+
+    [SerializeField]
+    Sprite[] lockonRankSprite;
+
     ReadCSV CSVReader;
 
     //シーン内での経過時間
     float time;
 
-    FireWorks fireWorks;
+    //FireWorks fireWorks;
 
     ReadCSV readCSV;
 
-    int LockOnNumber;
+    //int lockOnNumber;
 
-	bool isEnd;
+    Image lockonRankImage;
+
+    bool isEnd;
 	//GameObject endFireworks;
 
     //現在何番目（CSVの何行目）の花火を飛ばしているか
     int readFireworksNumber;
 
+    List<GameObject> lockOnSeedObjects = new List<GameObject>();
+    List<FireWorks> lockOnObjFireWorks = new List<FireWorks>();
     //MainSceneChanger mSceneChanger;
 
     void Awake()
@@ -86,7 +96,10 @@ public class FireWorksCreater : MonoBehaviour
         //各値の初期化
         readFireworksNumber = 0;
         time = 0;
-        LockOnNumber = 0;
+        //lockOnNumber = 0;
+        
+        lockonRankImage = lockonRank.GetComponent<Image>();
+        lockonRank.SetActive(false);
     }
 
     void Update()
@@ -100,15 +113,20 @@ public class FireWorksCreater : MonoBehaviour
         {
             //時間の更新
             time += Time.deltaTime;
+
+            //入力が無ければロックオンした数を０に戻す
+            if (Input.GetMouseButton(0) == false)
+            {
+                if (lockOnSeedObjects.Count >= 5 && gallerys.isPlaying == false) StartCoroutine(PlayAudio());
+                lockOnObjFireWorks.Clear();
+                lockOnSeedObjects.Clear();
+                //if (lockOnNumber >= 5 && gallerys.isPlaying == false) StartCoroutine(PlayAudio());
+                //lockOnNumber = 0;
+            }
+
             //CsvDataの配列長さを超えていないかのチェック
             if (readCSV.CsvData.Length > readFireworksNumber)
             {
-                if (/*ReceivedZKOO.GetHand().isTouching == false*/Input.GetMouseButton(0) == false)
-                {
-					if (LockOnNumber >= 5&& gallerys.isPlaying == false) StartCoroutine(PlayAudio());
-                    LockOnNumber = 0;
-                }
-
                 //発射時間が現在の経過時間と同じときの処理
                 while (readCSV.CsvData[readFireworksNumber].shotTiming <= time)
                 {
@@ -128,13 +146,13 @@ public class FireWorksCreater : MonoBehaviour
                         angle//角度
                         ) as GameObject;
 
-                    fireWorks = seedObj.GetComponent<FireWorks>();
+                    FireWorks fireWorks = seedObj.GetComponent<FireWorks>();
 
                     if (fireWorks != null)
                     {
                         fireWorks.FireWorksImpact = fireWorksImpact
                             [(int)readCSV.CsvData[readFireworksNumber].fireｗorksType]
-                            .Color[readCSV.CsvData[readFireworksNumber].fireworksColor/* % fireWorksImpact[(int)readCSV.CsvData[readFireworksNumber].fireｗorksType].Color.Length*/];
+                            .Color[readCSV.CsvData[readFireworksNumber].fireworksColor];
                         fireWorks.Size = readCSV.CsvData[readFireworksNumber].fireworksSize;
                     }
 
@@ -142,6 +160,16 @@ public class FireWorksCreater : MonoBehaviour
                     readFireworksNumber++;
                     //飛ばしていたのが最後の花火ならループを抜ける
                     if (readCSV.CsvData.Length <= readFireworksNumber) break;
+                }
+
+                for (int i = 0; i < lockOnSeedObjects.Count; i++)
+                {
+                    lockOnObjFireWorks[i].ExploadOrderNumber = i;
+                    if (lockOnSeedObjects[i] == null || lockOnSeedObjects[i].transform.position.y >= 40)
+                    {
+                        lockOnObjFireWorks.RemoveAt(i);
+                        lockOnSeedObjects.RemoveAt(i);
+                    }
                 }
             }
         }
@@ -182,12 +210,32 @@ public class FireWorksCreater : MonoBehaviour
             //当たったオブジェクトを格納
             GameObject obj = hit.collider.gameObject;
             //花火の玉のオブジェクトなら爆発するかのフラグを真にする
-            fireWorks = obj.GetComponent<FireWorks>();
+            FireWorks fireWorks = obj.GetComponent<FireWorks>();
+
             if (fireWorks != null && fireWorks.IsExploded == false)
             {
-                fireWorks.ExploadOrderNumber = LockOnNumber++;
+                //ロックオンされた弾のリストに追加
+                lockOnSeedObjects.Add(obj);
+                lockOnObjFireWorks.Add(fireWorks);
+
+                fireWorks.ExploadOrderNumber = lockOnSeedObjects.Count-1;//lockOnNumber++;
                 fireWorks.IsExploded = true;
                 Instantiate(hitEffect, obj.transform.position, Quaternion.Euler(0, 0, 0));
+
+                if (lockOnSeedObjects.Count >= 3)
+                {
+                    lockonRankImage.transform.position = obj.transform.position + new Vector3(-5, 5, 0);
+
+                    if (lockOnSeedObjects.Count >= 5) lockonRankImage.sprite = lockonRankSprite[1];
+                    else lockonRankImage.sprite = lockonRankSprite[0];
+                    
+                    if (lockonRank.activeInHierarchy == false) lockonRank.SetActive(true);
+                    else
+                    {
+                        lockonRank.SetActive(false);
+                        lockonRank.SetActive(true);
+                    }
+                }
             }
         }
     }
