@@ -34,12 +34,12 @@ public class TutorialFireWorksCreater : MonoBehaviour
         get { return lockOnNumber; }
     }
 
-    private bool isExplode;
+    /*private bool isExplode;
 
     public bool  IsExplode
     {
         get { return isExplode; }
-    }
+    }*/
 
     void Awake()
     {

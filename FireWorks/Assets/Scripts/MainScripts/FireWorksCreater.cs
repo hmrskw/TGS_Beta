@@ -53,7 +53,7 @@ public class FireWorksCreater : MonoBehaviour
     AudioSource gallerys;
 
     [SerializeField]
-    GameObject lockonRank;
+    GameObject lockonRankObj;
 
     [SerializeField]
     Sprite[] lockonRankSprite;
@@ -63,24 +63,21 @@ public class FireWorksCreater : MonoBehaviour
     //シーン内での経過時間
     float time;
 
-    //FireWorks fireWorks;
-
     ReadCSV readCSV;
 
-    //int lockOnNumber;
-
-    Image lockonRankImage;
+    //Image lockonRankImage;
+    //LockonRank lockonRank;
+    SpriteRenderer lockonRankImage;
+    LockonRank1 lockonRank;
 
     bool isEnd;
-	//GameObject endFireworks;
 
     //現在何番目（CSVの何行目）の花火を飛ばしているか
     int readFireworksNumber;
 
     List<GameObject> lockOnSeedObjects = new List<GameObject>();
     List<FireWorks> lockOnObjFireWorks = new List<FireWorks>();
-    //MainSceneChanger mSceneChanger;
-
+    
     void Awake()
     {
         //CSVファイルを読み込む
@@ -92,14 +89,16 @@ public class FireWorksCreater : MonoBehaviour
     }
     void Start()
     {
-        //mSceneChanger = new MainSceneChanger();
         //各値の初期化
         readFireworksNumber = 0;
         time = 0;
-        //lockOnNumber = 0;
-        
-        lockonRankImage = lockonRank.GetComponent<Image>();
-        lockonRank.SetActive(false);
+
+        //lockonRankImage = lockonRankObj.GetComponent<Image>();
+        //lockonRank = lockonRankObj.GetComponent<LockonRank>();
+        lockonRankImage = lockonRankObj.GetComponent<SpriteRenderer>();
+        lockonRank = lockonRankObj.GetComponent<LockonRank1>();
+
+        lockonRankObj.SetActive(false);
     }
 
     void Update()
@@ -120,8 +119,6 @@ public class FireWorksCreater : MonoBehaviour
                 if (lockOnSeedObjects.Count >= 5 && gallerys.isPlaying == false) StartCoroutine(PlayAudio());
                 lockOnObjFireWorks.Clear();
                 lockOnSeedObjects.Clear();
-                //if (lockOnNumber >= 5 && gallerys.isPlaying == false) StartCoroutine(PlayAudio());
-                //lockOnNumber = 0;
             }
 
             //CsvDataの配列長さを超えていないかのチェック
@@ -201,7 +198,7 @@ public class FireWorksCreater : MonoBehaviour
     void RayCast()
     {
         //カメラの場所からポインタの場所に向かってレイを飛ばす
-        Ray ray = Camera.main.ScreenPointToRay(/*new Vector2(ReceivedZKOO.GetHand().position.x, ReceivedZKOO.GetHand().position.y + Screen.height)*/Input.mousePosition);
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit = new RaycastHit();
 
         //レイが何か当たっているかを調べる
@@ -218,28 +215,46 @@ public class FireWorksCreater : MonoBehaviour
                 lockOnSeedObjects.Add(obj);
                 lockOnObjFireWorks.Add(fireWorks);
 
-                fireWorks.ExploadOrderNumber = lockOnSeedObjects.Count-1;//lockOnNumber++;
+                fireWorks.ExploadOrderNumber = lockOnSeedObjects.Count-1;
                 fireWorks.IsExploded = true;
                 Instantiate(hitEffect, obj.transform.position, Quaternion.Euler(0, 0, 0));
 
                 if (lockOnSeedObjects.Count >= 3)
                 {
-                    lockonRankImage.transform.position = obj.transform.position + new Vector3(-5, 5, 0);
+                    ///TODO:マウスカーソルの左上に表示するのに使う
+                    //lockonRankImage.transform.position = obj.transform.position + new Vector3(-5, 5, 0);
 
-                    if (lockOnSeedObjects.Count >= 5) lockonRankImage.sprite = lockonRankSprite[1];
-                    else lockonRankImage.sprite = lockonRankSprite[0];
-                    
-                    if (lockonRank.activeInHierarchy == false) lockonRank.SetActive(true);
+                    if (lockOnSeedObjects.Count >= 5)
+                    {
+                        lockonRankImage.sprite = lockonRankSprite[1];
+                        lockonRankImage.color = new Color(0.9f, 0.9f, 0.9f,0f);
+                    }
                     else
                     {
-                        lockonRank.SetActive(false);
-                        lockonRank.SetActive(true);
+                        lockonRankImage.sprite = lockonRankSprite[0];
+                        lockonRankImage.color = new Color(0.7f,0.7f,0.7f, 0f);
                     }
-                }
+
+                    if (lockonRankObj.activeInHierarchy == false) lockonRankObj.SetActive(true);
+                    else
+                    {
+                        ///TODO:画面の左上に表示するのに使う
+                        lockonRank.StartTime = Time.timeSinceLevelLoad;
+
+                        ///TODO:マウスカーソルの左上に表示するのに使う
+                        //lockonRankObj.SetActive(false);
+                        //lockonRankObj.SetActive(true);
+                    }
+                }/*
+                else
+                {
+                    lockonRankObj.SetActive(false);
+                }*/
             }
         }
     }
 }
+
 /*
 RayCast(当たった時に実行したい関数(), string "判定したいオブジェクトの名前")
 {

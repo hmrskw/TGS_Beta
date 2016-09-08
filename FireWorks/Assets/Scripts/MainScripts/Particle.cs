@@ -12,7 +12,7 @@ public class Particle : MonoBehaviour {
     void Start () {
         particle = GetComponent<ParticleSystem>();
         //花火の色をfireworksの色に変更
-        particle.GetComponent<Renderer>().material.SetColor("_TintColor", fireColor);
+        //particle.GetComponent<Renderer>().material.SetColor("_TintColor", fireColor);
     }
 	
 	// Update is called once per frame
