@@ -178,7 +178,7 @@ public class ResultManager : MonoBehaviour {
     IEnumerator Gage()
     {
         scoreText.SetActive(true);
-        while (gageValue <= System.Math.Min(score / (evaluationStandard * 2f), 1f)) {
+        while (gageValue <= System.Math.Min((score / (evaluationStandard * 2f)*0.8f)+0.2f, 1f)) {
             evaluationSlider.value = gageValue;
             gageValue += 0.01f;
             yield return null;
@@ -196,6 +196,8 @@ public class ResultManager : MonoBehaviour {
                 break;
             }
         }
+        yield return new WaitForSeconds(2f);
+
         while (true)
         {
             if (Input.GetMouseButtonDown(0))

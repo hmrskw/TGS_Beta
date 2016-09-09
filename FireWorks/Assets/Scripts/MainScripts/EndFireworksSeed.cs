@@ -37,7 +37,6 @@ public class EndFireworksSeed : MonoBehaviour {
             for (int j = 0; j < 2; j++)
             {
                 Vector2 sign = new Vector2(1 - (j * 2), 3 - (i * 2));
-                Debug.Log(sign);
                 Instantiate(aroundFireworksWordImpacts, transform.position - new Vector3(10 * i * sign.x, 5 * i * sign.y, 0), Quaternion.Euler(0, 180, 0));
             }
         }

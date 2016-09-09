@@ -77,8 +77,6 @@ public class ButtonReaction : MonoBehaviour
 
     void Update()
     {
-        lockOnNumber = tutorialFireworksCreater.LockOnNumber;
-
         if (RayCast("UI"))
         {
             //レイが当たったら次へアイコンの色を変更
@@ -130,13 +128,15 @@ public class ButtonReaction : MonoBehaviour
 
         CheckFireworksHowExplosion();
 
-/*        if (canRotation)
-        {
-            //看板の回転
-            RotationSignboard();
-        }
-        */
-        if(canEasing)
+        lockOnNumber = tutorialFireworksCreater.LockOnNumber;
+
+        /*        if (canRotation)
+                {
+                    //看板の回転
+                    RotationSignboard();
+                }
+                */
+        if (canEasing)
         {
             //看板とボタンをEasingで画面外に出して、
             //シーンを変える処理
@@ -216,7 +216,7 @@ public class ButtonReaction : MonoBehaviour
         //させていたら複数爆発させたかのチェックへ
         else if (pageCount == 2)
         {
-			if (RayCast("FireWorksSeed") && !Input.GetMouseButton(0))
+			if ((RayCast("FireWorksSeed")||lockOnNumber > 0) && !Input.GetMouseButton(0))
 			{
 				ChangeButtonUi();
 			}

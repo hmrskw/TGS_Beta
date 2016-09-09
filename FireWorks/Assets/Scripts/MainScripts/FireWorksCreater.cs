@@ -5,12 +5,8 @@ using UnityEngine.UI;
 
 public class FireWorksCreater : MonoBehaviour
 {
-    enum DIRECTION
-    {
-        LEFT = 1, RIGHT = -1
-    }
-    [SerializeField, Tooltip("時間制限")]
-    int timeLimit;
+    //[SerializeField, Tooltip("時間制限")]
+    //int timeLimit;
 
     [SerializeField]
     Slider timeBarSlider;
@@ -58,10 +54,8 @@ public class FireWorksCreater : MonoBehaviour
     [SerializeField]
     Sprite[] lockonRankSprite;
 
-    ReadCSV CSVReader;
-
     //シーン内での経過時間
-    float time;
+    //float time;
 
     ReadCSV readCSV;
 
@@ -91,7 +85,7 @@ public class FireWorksCreater : MonoBehaviour
     {
         //各値の初期化
         readFireworksNumber = 0;
-        time = 0;
+        //time = 0;
 
         //lockonRankImage = lockonRankObj.GetComponent<Image>();
         //lockonRank = lockonRankObj.GetComponent<LockonRank>();
@@ -101,17 +95,54 @@ public class FireWorksCreater : MonoBehaviour
         lockonRankObj.SetActive(false);
     }
 
-    void Update()
+    void hitCheck()
     {
         //ポインターが当たった時の処理
-        RayCast();
+        GameObject hitObj = MainGameManager.Instance.RayCast();
+        if (hitObj != null && hitObj.name == "Utiage(Clone)")
+        {
+            FireWorks fireWorks = hitObj.GetComponent<FireWorks>();
+            if (fireWorks.IsExploded == false)
+            {
+                //ロックオンされた弾のリストに追加
+                lockOnSeedObjects.Add(hitObj);
+                lockOnObjFireWorks.Add(fireWorks);
 
-		timeBarSlider.value = 1-time/timeLimit;
+                fireWorks.ExploadOrderNumber = lockOnSeedObjects.Count - 1;
+                fireWorks.IsExploded = true;
+                Instantiate(hitEffect, hitObj.transform.position, Quaternion.Euler(0, 0, 0));
 
-		if (timeLimit >= time)
+                if (lockOnSeedObjects.Count >= 3)
+                {
+                    if (lockOnSeedObjects.Count >= 5)
+                    {
+                        lockonRankImage.sprite = lockonRankSprite[1];
+                        lockonRankImage.color = new Color(0.9f, 0.9f, 0.9f, 0f);
+                    }
+                    else
+                    {
+                        lockonRankImage.sprite = lockonRankSprite[0];
+                        lockonRankImage.color = new Color(0.7f, 0.7f, 0.7f, 0f);
+                    }
+
+                    if (lockonRankObj.activeInHierarchy == false) lockonRankObj.SetActive(true);
+                    else lockonRank.StartTime = Time.timeSinceLevelLoad;
+                }
+            }
+        };
+    }
+
+    void Update()
+    {
+        hitCheck();
+
+        //timeBarSlider.value = 1-time/timeLimit;
+        timeBarSlider.value = 1 - MainGameManager.Instance.GameTime / MainGameManager.Instance.TimeLimit;
+
+        if (MainGameManager.Instance.TimeLimit >= MainGameManager.Instance.GameTime/*MainGameManager.Instance.IsEnd*/)
         {
             //時間の更新
-            time += Time.deltaTime;
+            //time += Time.deltaTime;
 
             //入力が無ければロックオンした数を０に戻す
             if (Input.GetMouseButton(0) == false)
@@ -125,7 +156,7 @@ public class FireWorksCreater : MonoBehaviour
             if (readCSV.CsvData.Length > readFireworksNumber)
             {
                 //発射時間が現在の経過時間と同じときの処理
-                while (readCSV.CsvData[readFireworksNumber].shotTiming <= time)
+                while (readCSV.CsvData[readFireworksNumber].shotTiming <= /*time*/MainGameManager.Instance.GameTime)
                 {
                     //発射する玉の角度
                     Quaternion angle = Quaternion.identity;
@@ -195,7 +226,7 @@ public class FireWorksCreater : MonoBehaviour
 		Instantiate(endFireworksSeed,new Vector3(16.9f,4.25f,2f),Quaternion.Euler(-30,0,0));
     }
 
-    void RayCast()
+    /*void RayCast()
     {
         //カメラの場所からポインタの場所に向かってレイを飛ばす
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -245,31 +276,8 @@ public class FireWorksCreater : MonoBehaviour
                         //lockonRankObj.SetActive(false);
                         //lockonRankObj.SetActive(true);
                     }
-                }/*
-                else
-                {
-                    lockonRankObj.SetActive(false);
-                }*/
+                }
             }
         }
-    }
+    }*/
 }
-
-/*
-RayCast(当たった時に実行したい関数(), string "判定したいオブジェクトの名前")
-{
-        //カメラの場所からポインタの場所に向かってレイを飛ばす
-        Ray ray = Camera.main.ScreenPointToRay(new Vector2( ReceivedZKOO.GetRightHand().position.x, ReceivedZKOO.GetRightHand().position.y));
-        RaycastHit hit = new RaycastHit();
-
-        //レイが何か当たっているかを調べる
-        if (Physics.Raycast(ray, out hit))
-        {
-            //当たったオブジェクトを格納
-            string objName = hit.collider.gameObject.name;
-            if(objName == "判定したいオブジェクトの名前"){
-                当たった時に実行したい関数();
-            }
-        }    
-}
-*/
