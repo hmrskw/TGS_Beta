@@ -71,7 +71,7 @@ public class ReadCSV
         int suffixNumber = UnityEngine.Random.Range(0, 3);
         string path = Application.dataPath + "/CSVFiles/" + pathName[suffixNumber];
 
-
+        Debug.Log(pathName[suffixNumber]);
 
         //CSVデータを読み込んで、行に分割
         string[] lines = ReadCsvData(path);

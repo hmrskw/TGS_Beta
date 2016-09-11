@@ -24,7 +24,7 @@ public class ScoreManager : MonoBehaviour {
 			Destroy(gameObject);
 			return;
 		}
-        Cursor.visible = false;
+        //Cursor.visible = false;
         Instance = this;
 		DontDestroyOnLoad(gameObject);
 		init();

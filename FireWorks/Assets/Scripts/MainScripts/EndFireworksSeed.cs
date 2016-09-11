@@ -25,7 +25,7 @@ public class EndFireworksSeed : MonoBehaviour {
 	IEnumerator EndMain()
 	{
 		while(transform.position.x>=0){
-			transform.Translate(-speed,speed,0);
+			transform.Translate(-speed*1.5f,speed,0);
 			yield return null;
 		}
         for (int i = 0; i < endFireworksImpacts.Length; i++)

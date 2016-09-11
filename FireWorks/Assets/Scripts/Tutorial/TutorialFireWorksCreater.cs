@@ -67,7 +67,8 @@ public class TutorialFireWorksCreater : MonoBehaviour
                 GameObject seedObj = Instantiate(
                     fireWorksSeed,//玉のプレハブ
                     fireWorksInitPosition[i],//発射位置
-                    Quaternion.identity//角度
+                    Quaternion.Euler(-15, 0, 0)
+                    //Quaternion.identity//角度
                     ) as GameObject;
 
                 fireWorks = seedObj.GetComponent<FireWorks>();
@@ -110,7 +111,7 @@ RayCast(当たった時に実行したい関数(), string "判定したいオブ
         //カメラの場所からポインタの場所に向かってレイを飛ばす
         Ray ray = Camera.main.ScreenPointToRay(new Vector2( ReceivedZKOO.GetRightHand().position.x, ReceivedZKOO.GetRightHand().position.y));
         Debug.Log("raycast");
-        Debug.DrawRay(ray.origin,ray.direction*100,Color.red);
+        s.DrawRay(ray.origin,ray.direction*100,Color.red);
         RaycastHit hit = new RaycastHit();
 
         //レイが何か当たっているかを調べる

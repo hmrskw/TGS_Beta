@@ -24,7 +24,7 @@ public class FireWorksCreater : MonoBehaviour
     float[] fireWorksAngle = new float[3];
     
     [SerializeField, Tooltip("玉")]
-    GameObject fireWorksSeed;
+    GameObject[] fireWorksSeed;
 
     [SerializeField]
     GameObject hitEffect;
@@ -46,13 +46,14 @@ public class FireWorksCreater : MonoBehaviour
     private FireWorksImpact[] fireWorksImpact;
 
     [SerializeField]
-    AudioSource gallerys;
+    Gallery gallerys;
+    //AudioSource gallerys;
 
-    [SerializeField]
-    GameObject lockonRankObj;
+    //[SerializeField]
+    //GameObject lockonRankObj;
 
-    [SerializeField]
-    Sprite[] lockonRankSprite;
+    //[SerializeField]
+    //Sprite[] lockonRankSprite;
 
     //シーン内での経過時間
     //float time;
@@ -61,8 +62,8 @@ public class FireWorksCreater : MonoBehaviour
 
     //Image lockonRankImage;
     //LockonRank lockonRank;
-    SpriteRenderer lockonRankImage;
-    LockonRank1 lockonRank;
+    //SpriteRenderer lockonRankImage;
+    //LockonRank1 lockonRank;
 
     bool isEnd;
 
@@ -89,17 +90,17 @@ public class FireWorksCreater : MonoBehaviour
 
         //lockonRankImage = lockonRankObj.GetComponent<Image>();
         //lockonRank = lockonRankObj.GetComponent<LockonRank>();
-        lockonRankImage = lockonRankObj.GetComponent<SpriteRenderer>();
-        lockonRank = lockonRankObj.GetComponent<LockonRank1>();
+        //lockonRankImage = lockonRankObj.GetComponent<SpriteRenderer>();
+        //lockonRank = lockonRankObj.GetComponent<LockonRank1>();
 
-        lockonRankObj.SetActive(false);
+        //lockonRankObj.SetActive(false);
     }
 
     void hitCheck()
     {
         //ポインターが当たった時の処理
         GameObject hitObj = MainGameManager.Instance.RayCast();
-        if (hitObj != null && hitObj.name == "Utiage(Clone)")
+        if (hitObj != null && hitObj.tag == "FireWorksSeed")
         {
             FireWorks fireWorks = hitObj.GetComponent<FireWorks>();
             if (fireWorks.IsExploded == false)
@@ -112,22 +113,22 @@ public class FireWorksCreater : MonoBehaviour
                 fireWorks.IsExploded = true;
                 Instantiate(hitEffect, hitObj.transform.position, Quaternion.Euler(0, 0, 0));
 
-                if (lockOnSeedObjects.Count >= 3)
-                {
-                    if (lockOnSeedObjects.Count >= 5)
-                    {
-                        lockonRankImage.sprite = lockonRankSprite[1];
-                        lockonRankImage.color = new Color(0.9f, 0.9f, 0.9f, 0f);
-                    }
-                    else
-                    {
-                        lockonRankImage.sprite = lockonRankSprite[0];
-                        lockonRankImage.color = new Color(0.7f, 0.7f, 0.7f, 0f);
-                    }
+                //if (lockOnSeedObjects.Count >= 3)
+                //{
+                    //if (lockOnSeedObjects.Count >= 5)
+                    //{
+                        //lockonRankImage.sprite = lockonRankSprite[1];
+                        //lockonRankImage.color = new Color(0.9f, 0.9f, 0.9f, 0f);
+                    //}
+                    //else
+                    //{
+                        //lockonRankImage.sprite = lockonRankSprite[0];
+                        //lockonRankImage.color = new Color(0.7f, 0.7f, 0.7f, 0f);
+                    //}
 
-                    if (lockonRankObj.activeInHierarchy == false) lockonRankObj.SetActive(true);
-                    else lockonRank.StartTime = Time.timeSinceLevelLoad;
-                }
+                    //if (lockonRankObj.activeInHierarchy == false) lockonRankObj.SetActive(true);
+                    //else lockonRank.StartTime = Time.timeSinceLevelLoad;
+                //}
             }
         };
     }
@@ -147,7 +148,8 @@ public class FireWorksCreater : MonoBehaviour
             //入力が無ければロックオンした数を０に戻す
             if (Input.GetMouseButton(0) == false)
             {
-                if (lockOnSeedObjects.Count >= 5 && gallerys.isPlaying == false) StartCoroutine(PlayAudio());
+                //if (lockOnSeedObjects.Count >= 3 && gallerys.isPlaying == false) StartCoroutine(PlayAudio());
+                if (lockOnSeedObjects.Count >= 3) gallerys.IsCheer = true;
                 lockOnObjFireWorks.Clear();
                 lockOnSeedObjects.Clear();
             }
@@ -164,12 +166,15 @@ public class FireWorksCreater : MonoBehaviour
                     //発射方向が設定されていれば玉を飛ばす角度その方向に変える
                     if (readCSV.CsvData[readFireworksNumber].shotAngle != EnumDefinition.ShotAngle.NONE_ANGLE)
                     {
-                        angle = Quaternion.Euler(0, 0, fireWorksAngle[(int)readCSV.CsvData[readFireworksNumber].shotAngle]);
+                        angle = Quaternion.Euler(-15, 0, fireWorksAngle[(int)readCSV.CsvData[readFireworksNumber].shotAngle]);
                     }
+
+                    int seedID = 0;
+                    if (readCSV.CsvData[readFireworksNumber].fireｗorksType == EnumDefinition.FireｗorksType.SHAPE) seedID = 1;
 
                     //玉の生成
                     GameObject seedObj = Instantiate(
-                        fireWorksSeed,//玉のプレハブ
+                        fireWorksSeed[seedID],//玉のプレハブ
                         fireWorksInitPosition[readCSV.CsvData[readFireworksNumber].shotPosition],//発射位置
                         angle//角度
                         ) as GameObject;
@@ -182,6 +187,9 @@ public class FireWorksCreater : MonoBehaviour
                             [(int)readCSV.CsvData[readFireworksNumber].fireｗorksType]
                             .Color[readCSV.CsvData[readFireworksNumber].fireworksColor];
                         fireWorks.Size = readCSV.CsvData[readFireworksNumber].fireworksSize;
+                        
+                        //発射台が1と5の時は-60～60度のランダム、2,4の時は-30～30のランダム、３の時は0度固定
+                        fireWorks.FireWorksRotation = (readCSV.CsvData[readFireworksNumber].shotPosition - 2) * -30f;
                     }
 
                     //飛ばす花火を更新
@@ -214,16 +222,16 @@ public class FireWorksCreater : MonoBehaviour
 		}
     }
 
-    IEnumerator PlayAudio()
+    /*IEnumerator PlayAudio()
     {
         yield return new WaitForSeconds(1f);
         gallerys.Play();
-    }
+    }*/
 
     IEnumerator SceneChanger()
     {
     	yield return new WaitForSeconds(2f);
-		Instantiate(endFireworksSeed,new Vector3(16.9f,4.25f,2f),Quaternion.Euler(-30,0,0));
+		Instantiate(endFireworksSeed,new Vector3(26f, 4f, 2f),Quaternion.Euler(-30,0,0));
     }
 
     /*void RayCast()

@@ -45,7 +45,7 @@ public class ChangeButtonIconSprite : MonoBehaviour
     {
         for (int i = 0; i < 2; i++)
         {
-            if (/*ReceivedZKOO.GrippedHand((ReceivedZKOO.HAND)i)*/Input.GetMouseButtonDown(0)&& RayCast((ReceivedZKOO.HAND)i))
+            if (Input.GetMouseButtonDown(0))
             {
                 ReceivedZKOO.Handedness = (ReceivedZKOO.HAND)i;
                 titleSceneChanger.SceneChange("Tutorial");
@@ -67,24 +67,24 @@ public class ChangeButtonIconSprite : MonoBehaviour
         }
     }
 
-    bool RayCast(ReceivedZKOO.HAND id)
-    {
-        //カメラの場所からポインタの場所に向かってレイを飛ばす
-        Ray ray = Camera.main.ScreenPointToRay(/*new Vector2(ReceivedZKOO.GetHand(id).position.x, ReceivedZKOO.GetHand(id).position.y + Screen.height)*/Input.mousePosition);
-        RaycastHit hit = new RaycastHit();
+    //bool RayCast(ReceivedZKOO.HAND id)
+    //{
+    //    //カメラの場所からポインタの場所に向かってレイを飛ばす
+    //    Ray ray = Camera.main.ScreenPointToRay(/*new Vector2(ReceivedZKOO.GetHand(id).position.x, ReceivedZKOO.GetHand(id).position.y + Screen.height)*/Input.mousePosition);
+    //    RaycastHit hit = new RaycastHit();
 
-        //レイが何か当たっているかを調べる
-        if (Physics.Raycast(ray, out hit))
-        {
-            //当たったオブジェクトを格納
-            GameObject obj = hit.collider.gameObject;
+    //    //レイが何か当たっているかを調べる
+    //    if (Physics.Raycast(ray, out hit))
+    //    {
+    //        //当たったオブジェクトを格納
+    //        GameObject obj = hit.collider.gameObject;
             
-            if (obj.name == "GrappHand")
-            {
-                return true;
-            }
-        }
+    //        if (obj.name == "GrappHand")
+    //        {
+    //            return true;
+    //        }
+    //    }
 
-        return false;
-    }
+    //    return false;
+    //}
 }

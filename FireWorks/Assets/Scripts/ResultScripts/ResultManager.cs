@@ -34,6 +34,9 @@ public class ResultManager : MonoBehaviour {
     [SerializeField]
     bool isDelay;
 
+    [SerializeField]
+    GameObject endBoard;
+
     //Inspectorに複数データを表示するためのクラス
     [System.SerializableAttribute]
     public class EasingData
@@ -58,6 +61,9 @@ public class ResultManager : MonoBehaviour {
 
 	[SerializeField]
 	private AudioSource SE_result;
+
+    [SerializeField]
+    private AudioSource SE_gage;
 
     //[SerializeField]
     //Vector3 impactPosition;
@@ -128,6 +134,10 @@ public class ResultManager : MonoBehaviour {
         yield return StartCoroutine(Gage());
         yield return new WaitForSeconds(0.5f);
         yield return StartCoroutine(ImpactResultFireworks());
+        yield return new WaitForSeconds(5f);
+        yield return StartCoroutine(FallEndBoard());
+        yield return new WaitForSeconds(5f);
+        resultSceneChanger.SceneChange("Title");
     }
 
     IEnumerator MoveGallery()
@@ -178,11 +188,14 @@ public class ResultManager : MonoBehaviour {
     IEnumerator Gage()
     {
         scoreText.SetActive(true);
+        SE_gage.time = 4.3f - System.Math.Min((score / (evaluationStandard * 2f)), 1f)*2f;
+        SE_gage.Play();
         while (gageValue <= System.Math.Min((score / (evaluationStandard * 2f)*0.8f)+0.2f, 1f)) {
             evaluationSlider.value = gageValue;
-            gageValue += 0.01f;
+            gageValue += 0.5f*Time.deltaTime;
             yield return null;
         }
+        SE_gage.Stop();
     }
 
     IEnumerator ImpactResultFireworks()
@@ -196,15 +209,24 @@ public class ResultManager : MonoBehaviour {
                 break;
             }
         }
-        yield return new WaitForSeconds(2f);
+        yield return null;
 
-        while (true)
+        /*while (true)
         {
             if (Input.GetMouseButtonDown(0))
             {
                 resultSceneChanger.SceneChange("Title");
 				break;
             }
+            yield return null;
+        }*/
+    }
+
+    IEnumerator FallEndBoard()
+    {
+        while(endBoard.transform.position.y > 10)
+        {
+            endBoard.transform.Translate(new Vector3(0f,-0.1f,0f));
             yield return null;
         }
     }

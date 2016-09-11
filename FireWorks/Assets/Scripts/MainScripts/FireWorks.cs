@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
-using System;
+//using System;
 
 public class FireWorks : MonoBehaviour
 {
@@ -32,10 +32,20 @@ public class FireWorks : MonoBehaviour
     GameObject lockOnMarker;
     
     GameObject fireWorksImpact;
-
     public GameObject FireWorksImpact
     {
+        get { return fireWorksImpact; }
         set { fireWorksImpact = value; }
+    }
+
+    float fireWorksRotation;
+    public float FireWorksRotation
+    {
+        get { return fireWorksRotation; }
+        set {
+            if(fireWorksImpact.tag == "Mark") fireWorksRotation = Random.Range(-value,value);
+            else fireWorksRotation = 0f;
+        }
     }
 
     float size;
@@ -43,6 +53,7 @@ public class FireWorks : MonoBehaviour
     {
         set { size = 0.5f + value; }
     }
+
     //触れて爆発させる花火かどうか（使うかは不明）
     FIRE_WORKS_TYPE fireWorksType;
 
@@ -128,7 +139,7 @@ public class FireWorks : MonoBehaviour
         ScoreManager.AddScore(score + exploadOrderNumber);
 
         //花火のパーティクルを生成
-        GameObject fireworksParticle = Instantiate(fireWorksImpact, transform.position, Quaternion.Euler(0, 0, 0)) as GameObject;
+        GameObject fireworksParticle = Instantiate(fireWorksImpact, transform.position, Quaternion.Euler(0, 0, fireWorksRotation)) as GameObject;
 
         //大きさを変える
         fireworksParticle.transform.localScale *= size;

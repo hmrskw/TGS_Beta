@@ -2,6 +2,8 @@
 using System.Collections;
 
 public class LockOnScript : MonoBehaviour {
+    //[SerializeField]
+    //FireWorks fireworks;
 
     AudioSource lockOnAudio;
 
@@ -20,6 +22,8 @@ public class LockOnScript : MonoBehaviour {
             scale -= 0.05f;
             yield return null;
         }
+        //TODO:ロックオンしたときに音のピッチを上げる
+        //lockOnAudio.pitch += 0.2f* fireworks.ExploadOrderNumber;
         lockOnAudio.Play();
         yield return null; 
     }

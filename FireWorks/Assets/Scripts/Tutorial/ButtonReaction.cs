@@ -16,11 +16,17 @@ public class ButtonReaction : MonoBehaviour
     [SerializeField, Tooltip("画面左下に描画する看板")]
     private GameObject signborad;
 
+    [SerializeField]
+    private AudioSource signboradSE;
+
     [SerializeField, Tooltip("画面左上に描画する看板")]
     private GameObject sceneTitle;
 
     [SerializeField, Tooltip("画面右下に描画するボタン。0番が一枚目、１番が二枚目")]
     private GameObject[] pageTurnOverButton = new GameObject[2];
+
+    [SerializeField]
+    private GameObject stamp;
 
     [SerializeField, Tooltip("看板とボタンのEasingに使う")]
     private AnimationCurve curve;
@@ -73,6 +79,7 @@ public class ButtonReaction : MonoBehaviour
         pageTurnOverButtonIconMaterial = textColorChanger;
 
         pageTurnOverButton[0].SetActive(false);
+        stamp.SetActive(false);
     }
 
     void Update()
@@ -87,11 +94,13 @@ public class ButtonReaction : MonoBehaviour
             {
                 if (pageCount == 0)
                 {
-
                     //ページを次のページに変更
                     pageCount++;
 
+                    signboradSE.Play();
+
                     pageTurnOverButton[0].SetActive(false);
+                    stamp.SetActive(false);
 
                     //看板の回転を許可
                     //canRotation = true;
@@ -100,11 +109,15 @@ public class ButtonReaction : MonoBehaviour
                 {
                     //ページを次のページに変更
                     pageCount++;
+
+                    signboradSE.Play();
+
                     //看板の回転を許可
                     //canRotation = true;
                     //ボタンを2つ目から3つ目に変える
                     //ChangeButtonUi();
-					pageTurnOverButton[0].SetActive(false);
+                    pageTurnOverButton[0].SetActive(false);
+                    stamp.SetActive(false);
                 }
                 else
                 {
@@ -115,6 +128,8 @@ public class ButtonReaction : MonoBehaviour
                         //Easingの開始始時間の保存
                         startTime = Time.timeSinceLevelLoad;
                     }
+                    stamp.transform.parent = signborad.transform;
+                    //stamp.SetActive(false);
                 }
             }
         }
@@ -204,6 +219,8 @@ public class ButtonReaction : MonoBehaviour
             if (RayCast("FireWorksSeed") && !Input.GetMouseButton(0))
             {
                 pageTurnOverButton[0].SetActive(true);
+                stamp.SetActive(true);
+
             }
         }
 		if (pageCount == 1)
@@ -211,15 +228,17 @@ public class ButtonReaction : MonoBehaviour
 			if (lockOnNumber > 1)
 			{
 				pageTurnOverButton[0].SetActive(true);
-			}
-		}
+                stamp.SetActive(true);
+            }
+        }
         //させていたら複数爆発させたかのチェックへ
         else if (pageCount == 2)
         {
 			if ((RayCast("FireWorksSeed")||lockOnNumber > 0) && !Input.GetMouseButton(0))
 			{
 				ChangeButtonUi();
-			}
+                stamp.SetActive(true);
+            }
         }
     }
 

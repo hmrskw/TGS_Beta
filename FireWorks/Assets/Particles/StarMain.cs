@@ -35,6 +35,6 @@ public class StarMain : MonoBehaviour {
                 Quaternion.identity);
             yield return new WaitForSeconds(durationTime);
         }
-        yield return null;
+        Destroy(this.gameObject);
     }
 }

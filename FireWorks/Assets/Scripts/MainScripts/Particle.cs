@@ -6,7 +6,7 @@ public class Particle : MonoBehaviour {
     ParticleSystem particle;
 
     //花火の色
-    Color fireColor;
+    //Color fireColor;
 
     // Use this for initialization
     void Start () {
@@ -26,9 +26,9 @@ public class Particle : MonoBehaviour {
         }
 	}
 
-    public void setColor(Color color)
+    /*public void setColor(Color color)
     {
         //正規化
         this.fireColor = color/255f;
-    }
+    }*/
 }
