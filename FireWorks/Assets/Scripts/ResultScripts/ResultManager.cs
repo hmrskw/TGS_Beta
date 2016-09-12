@@ -65,9 +65,6 @@ public class ResultManager : MonoBehaviour {
     [SerializeField]
     private AudioSource SE_gage;
 
-    //[SerializeField]
-    //Vector3 impactPosition;
-
     float scoreRate;
     float score;
     float gageValue;
@@ -204,27 +201,18 @@ public class ResultManager : MonoBehaviour {
         {
             if (score >=
                 evaluationStandard * i) {
-				Instantiate(impact);
-				Instantiate(evalutionImpact[i]);//, impactPosition, Quaternion.Euler(0, 180, 0));
+				GameObject impactObj = Instantiate(impact);
+                impactObj.transform.localScale *= 1.5f;
+                Instantiate(evalutionImpact[i]);
                 break;
             }
         }
         yield return null;
-
-        /*while (true)
-        {
-            if (Input.GetMouseButtonDown(0))
-            {
-                resultSceneChanger.SceneChange("Title");
-				break;
-            }
-            yield return null;
-        }*/
     }
 
     IEnumerator FallEndBoard()
     {
-        while(endBoard.transform.position.y > 10)
+        while(endBoard.transform.position.y > 9)
         {
             endBoard.transform.Translate(new Vector3(0f,-0.1f,0f));
             yield return null;
