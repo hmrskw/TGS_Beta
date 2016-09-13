@@ -2,6 +2,7 @@
 using System.Collections;
 
 public class ScoreManager : MonoBehaviour {
+    
     static int totalFireWorksNum;
     public static int TotalFireWorksNum { set {totalFireWorksNum = value;} get { return totalFireWorksNum;} }
 
@@ -10,8 +11,8 @@ public class ScoreManager : MonoBehaviour {
 
     static int score;
     public static int Score { private set { score = value; } get { return score; } }
-
-	public static ScoreManager Instance
+    
+    public static ScoreManager Instance
 	{
 		get; private set;
 	}
@@ -24,10 +25,10 @@ public class ScoreManager : MonoBehaviour {
 			Destroy(gameObject);
 			return;
 		}
-        //Cursor.visible = false;
+        Cursor.visible = false;
         Instance = this;
 		DontDestroyOnLoad(gameObject);
-		init();
+        init();
 	}
 
     public static void init()

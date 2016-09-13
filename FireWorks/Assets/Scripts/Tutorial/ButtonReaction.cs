@@ -94,13 +94,18 @@ public class ButtonReaction : MonoBehaviour
             {
                 if (pageCount == 0)
                 {
+
                     //ページを次のページに変更
+                    ChangeNextPage();
+                        
+                    /*
                     pageCount++;
 
                     signboradSE.Play();
 
                     pageTurnOverButton[0].SetActive(false);
                     stamp.SetActive(false);
+                    */
 
                     //看板の回転を許可
                     //canRotation = true;
@@ -108,16 +113,15 @@ public class ButtonReaction : MonoBehaviour
                 else if (pageCount == 1)
                 {
                     //ページを次のページに変更
+                    ChangeNextPage();
+                    /*
                     pageCount++;
 
                     signboradSE.Play();
 
-                    //看板の回転を許可
-                    //canRotation = true;
-                    //ボタンを2つ目から3つ目に変える
-                    //ChangeButtonUi();
                     pageTurnOverButton[0].SetActive(false);
                     stamp.SetActive(false);
+                    */
                 }
                 else
                 {
@@ -159,6 +163,15 @@ public class ButtonReaction : MonoBehaviour
         }
     }
    
+    void ChangeNextPage()
+    {
+        pageCount++;
+
+        signboradSE.Play();
+
+        pageTurnOverButton[0].SetActive(false);
+        stamp.SetActive(false);
+    }
 
     /*private void RotationSignboard()
     {

@@ -149,7 +149,7 @@ public class FireWorksCreater : MonoBehaviour
             if (Input.GetMouseButton(0) == false)
             {
                 //if (lockOnSeedObjects.Count >= 3 && gallerys.isPlaying == false) StartCoroutine(PlayAudio());
-                if (lockOnSeedObjects.Count >= 3) gallerys.IsCheer = true;
+                if (lockOnSeedObjects.Count >= 5) gallerys.IsCheer = true;
                 lockOnObjFireWorks.Clear();
                 lockOnSeedObjects.Clear();
             }

@@ -50,6 +50,7 @@ public class ReadCSV
         "data1.csv", //構成１
         "data2.csv",  //構成２
         "data3.csv",  //構成３
+        "data4.csv",  //構成４
     };
     
     /*修正：三澤
@@ -68,11 +69,10 @@ public class ReadCSV
         //string path = Application.dataPath + "/CSVFiles/data1.csv";
         //string path = Application.dataPath + "/CSVFiles/data2.csv";
 
-        int suffixNumber = UnityEngine.Random.Range(0, 3);
+        int suffixNumber = UnityEngine.Random.Range(0, pathName.Length);
         string path = Application.dataPath + "/CSVFiles/" + pathName[suffixNumber];
 
         Debug.Log(pathName[suffixNumber]);
-
         //CSVデータを読み込んで、行に分割
         string[] lines = ReadCsvData(path);
 

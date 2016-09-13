@@ -212,7 +212,7 @@ public class ResultManager : MonoBehaviour {
 
     IEnumerator FallEndBoard()
     {
-        while(endBoard.transform.position.y > 9)
+        while(endBoard.transform.position.y > 3.75)
         {
             endBoard.transform.Translate(new Vector3(0f,-0.1f,0f));
             yield return null;
