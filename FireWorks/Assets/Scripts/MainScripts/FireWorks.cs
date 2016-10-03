@@ -30,7 +30,10 @@ public class FireWorks : MonoBehaviour
 
     [SerializeField]
     GameObject lockOnMarker;
-    
+
+    [SerializeField]
+    float delay;
+
     GameObject fireWorksImpact;
     public GameObject FireWorksImpact
     {
@@ -114,7 +117,7 @@ public class FireWorks : MonoBehaviour
 
     IEnumerator expload()
     {
-        yield return new WaitForSeconds(exploadOrderNumber * 0.1f);
+        yield return new WaitForSeconds(exploadOrderNumber * delay);
 
         //不発状態でない玉がボーダーライン超えていたとき
         if (transform.position.y > borderLine)

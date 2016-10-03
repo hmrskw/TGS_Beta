@@ -16,7 +16,6 @@ public class ReadCSV
         public int shotPosition;   //撃つ場所   
         public int fireworksColor; //花火の色
         public EnumDefinition.ShotAngle shotAngle;      //撃つ角度
-                                                        //public bool isApplyGravity; //重力をかけるかどうか
         public float fireworksSize;//花火のサイズ
     }
 
@@ -27,15 +26,12 @@ public class ReadCSV
         SHOT_POSITION,    //撃つ場所
         FIREWORKS_COLOR,  //花火の色
         SHOT_ANGLE,       //撃つ角度
-        //IS_APPLY_GRAVITY,  //重力をかけるかどうか
         FIREWORKS_SIZE    //花火のサイズ
     }
 
     //csvデータの要素数
     const int CSVDATA_ELEMENTS = 6;
-    //花火の色のドットで区切った要素数
-    //const int FIREWORKS_COLOR_ELEMENTS = 4;
-
+    
     //csvから取り出した情報を入れる配列
     private CSVData[] csvData;
 
@@ -102,33 +98,12 @@ public class ReadCSV
 
             csvData[i].shotPosition = Convert.ToInt16(didCommaSeparationData[(int)ElementsName.SHOT_POSITION]) - 1;
 
-            /*
-            //使わなくなったが、Vector4に格納する方法のコード
-
-            //読み込んだ数値を仮格納する
-            float[] tempFireworksColor = new float[4];
-            //CSVから読み込んだ文字列を仮格納する
-            string[] tempFireworksColorSentence = new string[4];
-            //カンマで区切られた文字列をドットでさらに区切る
-            tempFireworksColorSentence = DataCommaSeparation(didCommaSeparationData[(int)ElementsName.FIREWORKS_COLOR], dotSpliter, 4);
-            //ドットで区切られた数値を仮格納する
-            for (int j = 0; j < FIREWORKS_COLOR_ELEMENTS; j++)
-            {
-                tempFireworksColor[j] = Convert.ToSingle(tempFireworksColorSentence[j]);
-            }
-            //仮格納したデータをcsvDataに格納する
-            csvData[i].fireworksColor = new Vector4(tempFireworksColor[0],tempFireworksColor[1],
-                                                    tempFireworksColor[2],tempFireworksColor[3]);
-            */
-
             //CSVデータは「１」か「２」か「３」だが、このデータが添え字になるため－１している
             csvData[i].fireworksColor = Convert.ToInt16(didCommaSeparationData[(int)ElementsName.FIREWORKS_COLOR]) - 1;
             if (csvData[i].fireworksColor > 2) csvData[i].fireworksColor = 0;
 
             //文字列を元にEnumに変換して格納
             csvData[i].shotAngle = FireworksAngleChecker(didCommaSeparationData[(int)ElementsName.SHOT_ANGLE]);
-
-            //csvData[i].isApplyGravity = Convert.ToBoolean(didCommaSeparationData[(int)ElementsName.IS_APPLY_GRAVITY]);
 
             csvData[i].fireworksSize = Convert.ToSingle(didCommaSeparationData[(int)ElementsName.FIREWORKS_SIZE]);
         }
@@ -209,57 +184,6 @@ public class ReadCSV
 		{
 			return EnumDefinition.FireｗorksType.SHAPE;
 		}
-
-        /*        if (fireWorksName_ == "ナイアガラ")
-                {
-                    return EnumDefinition.FireｗorksType.NAIAGARA;
-                }
-                else if (fireWorksName_ == "万華鏡")
-                {
-                    return EnumDefinition.FireｗorksType.MANGEKYOU;
-                }
-                else if (fireWorksName_ == "芯入り銀冠菊")
-                {
-                    return EnumDefinition.FireｗorksType.SINIRI_GINKAMURO_GIKU;
-                }
-                //
-                else if (fireWorksName_ == "八重芯菊")
-                {
-                    return EnumDefinition.FireｗorksType.YAE_SIN_GIKU;
-                }
-                else if (fireWorksName_ == "錦冠菊")
-                {
-                    return EnumDefinition.FireｗorksType.NISIKI_KAMURO_GIKU;
-                }
-                else if (fireWorksName_ == "蜂")
-                {
-                    return EnumDefinition.FireｗorksType.HACHI;
-                }
-                else if (fireWorksName_ == "柳")
-                {
-                    return EnumDefinition.FireｗorksType.YANAGI;
-                }
-                else if (fireWorksName_ == "閃光")
-                {
-                    return EnumDefinition.FireｗorksType.SENKOU;
-                }
-                else if (fireWorksName_ == "冠菊")
-                {
-                    return EnumDefinition.FireｗorksType.KAMURO_GIKU;
-                }
-                else if (fireWorksName_ == "昇竜")
-                {
-                    return EnumDefinition.FireｗorksType.NOBORI_RYU;
-                }
-                else if (fireWorksName_ == "昇分花")
-                {
-                    return EnumDefinition.FireｗorksType.NOBORI_BUNKA;
-                }
-                else if (fireWorksName_ == "千輪菊")
-                {
-                    return EnumDefinition.FireｗorksType.SENRIN_GIKU;
-                }
-        */
         else
         {
             //どの花火の型にも当てはまらない場合エラーを出す
